@@ -226,19 +226,85 @@
       margin-bottom: 16px;
     }
 
-    .reminder-panel {
-      background: rgba(239, 68, 68, 0.08);
-      border: 1px solid rgba(248, 113, 113, 0.45);
-    }
-
     .panel h2 {
       font-size: 16.5px;
       margin-bottom: 12px;
       color: #38bdf8;
     }
 
-    .reminder-panel h2 {
-      color: #fca5a5;
+    .top-action-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .top-mode-btn {
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1px solid #475569;
+      background: #0b1320;
+      color: #e2e8f0;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .top-mode-btn:hover {
+      border-color: #38bdf8;
+    }
+
+    .top-mode-btn.active-reminder {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: #f59e0b;
+      color: #fde68a;
+    }
+
+    .top-mode-btn.active-recent {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: #38bdf8;
+      color: #bae6fd;
+    }
+
+    .reminder-date-picker-row {
+      display: none;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #0b1320;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      margin-bottom: 12px;
+    }
+
+    .reminder-date-picker-row.open {
+      display: flex;
+    }
+
+    .reminder-date-picker-row label {
+      margin: 0;
+      color: #fde68a;
+      font-size: 13.5px;
+    }
+
+    .reminder-date-picker-row input[type="date"] {
+      width: auto;
+      min-width: 175px;
+      padding: 9px 12px;
+    }
+
+    .mode-subtitle {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fde68a;
+      margin-bottom: 8px;
+    }
+
+    .mode-subtitle.recent-title {
+      color: #7dd3fc;
     }
 
     .search-bar {
@@ -299,12 +365,6 @@
       background: #15803d;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-      gap: 16px;
-    }
-
     .row-2 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -322,8 +382,8 @@
     }
 
     .record-card.due-today {
-      border-color: rgba(248, 113, 113, 0.65);
-      background: rgba(127, 29, 29, 0.22);
+      border-color: rgba(245, 158, 11, 0.65);
+      background: rgba(120, 53, 15, 0.22);
     }
 
     .record-top {
@@ -359,12 +419,6 @@
       background: rgba(245, 158, 11, 0.15);
       color: #fcd34d;
       border-color: rgba(245, 158, 11, 0.35);
-    }
-
-    .badge-due {
-      background: rgba(239, 68, 68, 0.25);
-      color: #fecaca;
-      border-color: rgba(248, 113, 113, 0.6);
     }
 
     .btn-edit {
@@ -596,14 +650,6 @@
       <button type="button" class="btn-logout" id="logoutBtn">Logout</button>
     </div>
 
-    <!-- Aaj / Due Date Reminder Box -->
-    <div class="panel reminder-panel" id="dueReminderPanel">
-      <h2>🔔 Aaj / Due Date Kaam Reminder</h2>
-      <div id="dueReminderList">
-        <p class="empty-note">Reminders check ho rahe hain...</p>
-      </div>
-    </div>
-
     <!-- Top Mobile Search Box -->
     <div class="panel">
       <h2>Mobile Number Se Search</h2>
@@ -618,90 +664,93 @@
       <div class="search-result-box" id="mobileSearchResult"></div>
     </div>
 
-    <!-- Search Ke Neeche: Upcoming / Next Date Work Box -->
+    <!-- Upar Do Buttons + Niche Box -->
     <div class="panel">
-      <h2>Aage Ka Kaam / Next Date List (Jin-Jin Ka Kaam Karna Hai)</h2>
-      <div id="upcomingWorkList">
+      <div class="top-action-buttons">
+        <button type="button" class="top-mode-btn active-reminder" id="btnReminderMode">
+          📅 Jinka Kaam Karna Hai Reminder
+        </button>
+        <button type="button" class="top-mode-btn" id="btnRecentMode">
+          🕒 Last Kaam Kin Ka Hua Hai
+        </button>
+      </div>
+
+      <div class="reminder-date-picker-row open" id="reminderDateRow">
+        <label for="reminderFilterDate">Date Choose Karein:</label>
+        <input type="date" id="reminderFilterDate" />
+      </div>
+
+      <div id="topModeBoxContent">
         <p class="empty-note">Records load ho rahe hain...</p>
       </div>
     </div>
 
-    <div class="grid-2">
-      <!-- Add / Follow-up / Edit Client Form -->
-      <div class="panel">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-          <h2 id="formHeading" style="margin-bottom:0;">Add Client</h2>
-          <button type="button" class="btn-add-client" id="toggleAddClientBtn">+ Add Client</button>
-        </div>
-
-        <div class="collapsible-form open" id="addClientFormBox">
-          <div class="mode-banner" id="modeBanner"></div>
-
-          <form id="clientForm">
-            <div class="row-2">
-              <div class="form-group">
-                <label for="clientName">Naam</label>
-                <input type="text" id="clientName" placeholder="Client ka naam" required />
-              </div>
-              <div class="form-group">
-                <label for="clientMobile">Mobile Number</label>
-                <input type="tel" id="clientMobile" placeholder="10-ank mobile number" required />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="clientAddress">Address</label>
-              <input type="text" id="clientAddress" placeholder="Poora pata / area" required />
-            </div>
-
-            <div class="row-2">
-              <div class="form-group">
-                <label for="roUvType">RO / UV</label>
-                <select id="roUvType" required>
-                  <option value="RO">RO</option>
-                  <option value="UV">UV</option>
-                  <option value="RO + UV">RO + UV</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="totalBill">Total Bill (₹)</label>
-                <input type="number" id="totalBill" placeholder="0" min="0" required />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="workAndItems">Kya Kaam Kiya / Kya Samaan Diya</label>
-              <textarea
-                id="workAndItems"
-                placeholder="Jaise: RO membrane change, pre-filter, UV lamp, service, etc..."
-                required
-              ></textarea>
-            </div>
-
-            <div class="row-2">
-              <div class="form-group">
-                <label for="workDate">Kis Date Ko Kaam Kiya</label>
-                <input type="date" id="workDate" required />
-              </div>
-              <div class="form-group">
-                <label for="nextDate">Next Date</label>
-                <input type="date" id="nextDate" />
-              </div>
-            </div>
-
-            <button type="submit" class="btn-primary" id="saveClientBtn">Client Record Save Karein</button>
-            <button type="button" class="btn-cancel-edit" id="cancelModeBtn">Cancel Karein</button>
-            <div class="status-msg" id="clientFormStatus"></div>
-          </form>
-        </div>
+    <!-- Add / Follow-up / Edit Client Form -->
+    <div class="panel">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+        <h2 id="formHeading" style="margin-bottom:0;">Add Client</h2>
+        <button type="button" class="btn-add-client" id="toggleAddClientBtn">+ Add Client</button>
       </div>
 
-      <!-- Recent Completed Work Box -->
-      <div class="panel">
-        <h2>Pichhle Kaam (Recent Work History)</h2>
-        <div id="recentWorkList">
-          <p class="empty-note">Records load ho rahe hain...</p>
-        </div>
+      <div class="collapsible-form open" id="addClientFormBox">
+        <div class="mode-banner" id="modeBanner"></div>
+
+        <form id="clientForm">
+          <div class="row-2">
+            <div class="form-group">
+              <label for="clientName">Naam</label>
+              <input type="text" id="clientName" placeholder="Client ka naam" required />
+            </div>
+            <div class="form-group">
+              <label for="clientMobile">Mobile Number</label>
+              <input type="tel" id="clientMobile" placeholder="10-ank mobile number" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="clientAddress">Address</label>
+            <input type="text" id="clientAddress" placeholder="Poora pata / area" required />
+          </div>
+
+          <div class="row-2">
+            <div class="form-group">
+              <label for="roUvType">RO / UV</label>
+              <select id="roUvType" required>
+                <option value="RO">RO</option>
+                <option value="UV">UV</option>
+                <option value="RO + UV">RO + UV</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="totalBill">Total Bill (₹)</label>
+              <input type="number" id="totalBill" placeholder="0" min="0" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="workAndItems">Kya Kaam Kiya / Kya Samaan Diya</label>
+            <textarea
+              id="workAndItems"
+              placeholder="Jaise: RO membrane change, pre-filter, UV lamp, service, etc..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="row-2">
+            <div class="form-group">
+              <label for="workDate">Kis Date Ko Kaam Kiya</label>
+              <input type="date" id="workDate" required />
+            </div>
+            <div class="form-group">
+              <label for="nextDate">Next Date</label>
+              <input type="date" id="nextDate" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" id="saveClientBtn">Client Record Save Karein</button>
+          <button type="button" class="btn-cancel-edit" id="cancelModeBtn">Cancel Karein</button>
+          <div class="status-msg" id="clientFormStatus"></div>
+        </form>
       </div>
     </div>
   </div>
@@ -750,11 +799,14 @@
     const loggedInUser = document.getElementById("loggedInUser");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    const dueReminderList = document.getElementById("dueReminderList");
+    const btnReminderMode = document.getElementById("btnReminderMode");
+    const btnRecentMode = document.getElementById("btnRecentMode");
+    const reminderDateRow = document.getElementById("reminderDateRow");
+    const reminderFilterDate = document.getElementById("reminderFilterDate");
+    const topModeBoxContent = document.getElementById("topModeBoxContent");
+
     const mobileSearchInput = document.getElementById("mobileSearchInput");
     const mobileSearchResult = document.getElementById("mobileSearchResult");
-    const upcomingWorkList = document.getElementById("upcomingWorkList");
-    const recentWorkList = document.getElementById("recentWorkList");
 
     const toggleAddClientBtn = document.getElementById("toggleAddClientBtn");
     const addClientFormBox = document.getElementById("addClientFormBox");
@@ -770,6 +822,7 @@
     let editingRecordId = null;
     let followupSourceRecordId = null;
     let activeInlineDateKey = null;
+    let activeTopView = "reminder"; // "reminder" | "recent"
 
     function getTodayDateString() {
       const now = new Date();
@@ -779,7 +832,9 @@
       return `${y}-${m}-${d}`;
     }
 
-    document.getElementById("workDate").value = getTodayDateString();
+    const todayStr = getTodayDateString();
+    document.getElementById("workDate").value = todayStr;
+    reminderFilterDate.value = todayStr;
 
     function setBoxMessage(el, message, type = "error") {
       el.textContent = message;
@@ -831,10 +886,24 @@
       document.getElementById("workDate").value = getTodayDateString();
     }
 
+    function setTopView(viewName) {
+      activeTopView = viewName;
+      if (viewName === "reminder") {
+        btnReminderMode.classList.add("active-reminder");
+        btnRecentMode.classList.remove("active-recent");
+        reminderDateRow.classList.add("open");
+      } else {
+        btnRecentMode.classList.add("active-recent");
+        btnReminderMode.classList.remove("active-reminder");
+        reminderDateRow.classList.remove("open");
+      }
+      renderTopModeBox();
+    }
+
     window.toggleInlineDateEditor = function (recordId, sectionTag) {
       const key = `${sectionTag}_${recordId}`;
       activeInlineDateKey = activeInlineDateKey === key ? null : key;
-      renderAllLists();
+      renderTopModeBox();
       renderMobileSearch();
     };
 
@@ -935,20 +1004,17 @@
       const uniqueKey = `${sectionTag}_${r.id}`;
       const isDateEditorOpen = activeInlineDateKey === uniqueKey;
       const dateInputId = `inlineNextDate_${safeSection}_${safeId}`;
-
-      const todayStr = getTodayDateString();
-      const dueNow = isDue || (r.nextDate && r.nextDate <= todayStr);
+      const currentToday = getTodayDateString();
 
       let badgeHtml = `<span class="badge">₹${escapeHtml(r.totalBill || 0)}</span>`;
-      if (dueNow && r.nextDate) {
-        const label = r.nextDate === todayStr ? `Aaj Kaam (${escapeHtml(r.nextDate)})` : `Due: ${escapeHtml(r.nextDate)}`;
-        badgeHtml = `<span class="badge badge-due">${label}</span>`;
+      if (isDue && r.nextDate) {
+        badgeHtml = `<span class="badge badge-next">Date: ${escapeHtml(r.nextDate)}</span>`;
       } else if (showNextBadge && r.nextDate) {
         badgeHtml = `<span class="badge badge-next">Next: ${escapeHtml(r.nextDate)}</span>`;
       }
 
       return `
-        <div class="record-card ${dueNow ? "due-today" : ""}">
+        <div class="record-card ${isDue ? "due-today" : ""}">
           <div class="record-top">
             <span>${escapeHtml(r.name)} (${escapeHtml(r.mobile)})</span>
             <div class="record-actions">
@@ -976,7 +1042,7 @@
 
           <div class="inline-date-box ${isDateEditorOpen ? "open" : ""}">
             <span class="record-meta" style="color:#fde68a; font-weight:600;">Nayi Kaam Date:</span>
-            <input type="date" id="${dateInputId}" value="${escapeHtml(r.nextDate || todayStr)}" />
+            <input type="date" id="${dateInputId}" value="${escapeHtml(r.nextDate || currentToday)}" />
             <button type="button" class="btn-save-inline-date" onclick="window.saveInlineNextDate('${safeId}', '${dateInputId}')">
               Save Date
             </button>
@@ -1027,40 +1093,49 @@
       }
     }
 
-    function renderAllLists() {
-      const todayStr = getTodayDateString();
+    function renderTopModeBox() {
+      if (activeTopView === "reminder") {
+        const chosenDate = reminderFilterDate.value;
+        const headingText = chosenDate
+          ? `${escapeHtml(chosenDate)} date ko aapko inka kaam karna hai:`
+          : "Upar se date choose karein — is date ko aapko inka kaam karna hai:";
 
-      const dueRecords = allRecords
-        .filter((r) => Boolean(r.nextDate) && r.nextDate <= todayStr)
-        .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
+        const dateMatches = chosenDate
+          ? allRecords.filter((r) => r.nextDate === chosenDate)
+          : [];
 
-      if (!dueRecords.length) {
-        dueReminderList.innerHTML = `<p class="empty-note">Aaj (${escapeHtml(todayStr)}) ke liye koi due reminder nahi hai.</p>`;
+        if (!chosenDate) {
+          topModeBoxContent.innerHTML = `<div class="mode-subtitle">${headingText}</div>`;
+          return;
+        }
+
+        if (!dateMatches.length) {
+          topModeBoxContent.innerHTML = `
+            <div class="mode-subtitle">${headingText}</div>
+            <p class="empty-note">${escapeHtml(chosenDate)} ke liye kisi client ki Next Date set nahi hai.</p>
+          `;
+        } else {
+          topModeBoxContent.innerHTML =
+            `<div class="mode-subtitle">${headingText}</div>` +
+            dateMatches
+              .map((r) => formatRecordCard(r, { showNextBadge: true, isDue: true, sectionTag: "reminderDate" }))
+              .join("");
+        }
       } else {
-        dueReminderList.innerHTML = dueRecords
-          .map((r) => formatRecordCard(r, { showNextBadge: true, isDue: true, sectionTag: "due" }))
-          .join("");
-      }
-
-      const upcoming = allRecords
-        .filter((r) => Boolean(r.nextDate))
-        .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
-
-      if (!upcoming.length) {
-        upcomingWorkList.innerHTML = `<p class="empty-note">Abhi kisi client ki Next Date set nahi hai.</p>`;
-      } else {
-        upcomingWorkList.innerHTML = upcoming
-          .map((r) => formatRecordCard(r, { showNextBadge: true, sectionTag: "upcoming" }))
-          .join("");
-      }
-
-      if (!allRecords.length) {
-        recentWorkList.innerHTML = `<p class="empty-note">Abhi koi record save nahi hua hai.</p>`;
-      } else {
-        recentWorkList.innerHTML = allRecords
-          .slice(0, 20)
-          .map((r) => formatRecordCard(r, { showNextBadge: false, sectionTag: "recent" }))
-          .join("");
+        // Last kaam kin ka hua hai (sabse naye save/update hue kaam upar, live update)
+        if (!allRecords.length) {
+          topModeBoxContent.innerHTML = `
+            <div class="mode-subtitle recent-title">Abhi last mein jin clients ka kaam hua hai:</div>
+            <p class="empty-note">Abhi koi kaam save nahi hua hai.</p>
+          `;
+        } else {
+          topModeBoxContent.innerHTML =
+            `<div class="mode-subtitle recent-title">Abhi last mein jin clients ka kaam hua hai (naye kaam aate hi update hota rahega):</div>` +
+            allRecords
+              .slice(0, 25)
+              .map((r) => formatRecordCard(r, { showNextBadge: false, sectionTag: "lastWork" }))
+              .join("");
+        }
       }
     }
 
@@ -1072,16 +1147,14 @@
           allRecords = snapshot.docs
             .map((d) => ({ id: d.id, ...d.data() }))
             .sort((a, b) => getRecordTimeMs(b) - getRecordTimeMs(a));
-          renderAllLists();
+          renderTopModeBox();
           renderMobileSearch();
         },
         (err) => {
           const msg = `<p class="empty-note">Firestore error (Database bana kar Rules publish karein): ${escapeHtml(
             err.message
           )}</p>`;
-          dueReminderList.innerHTML = msg;
-          upcomingWorkList.innerHTML = msg;
-          recentWorkList.innerHTML = msg;
+          topModeBoxContent.innerHTML = msg;
         }
       );
     }
@@ -1188,6 +1261,10 @@
         emailLinkBtn.textContent = "Gmail Par Sign-In Link Bhejein";
       }
     });
+
+    btnReminderMode.addEventListener("click", () => setTopView("reminder"));
+    btnRecentMode.addEventListener("click", () => setTopView("recent"));
+    reminderFilterDate.addEventListener("change", renderTopModeBox);
 
     toggleAddClientBtn.addEventListener("click", () => {
       addClientFormBox.classList.toggle("open");
