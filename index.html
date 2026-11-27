@@ -175,7 +175,7 @@
     .dashboard {
       display: none;
       width: 100%;
-      max-width: 1060px;
+      max-width: 1080px;
       margin: 0 auto;
     }
 
@@ -226,10 +226,19 @@
       margin-bottom: 16px;
     }
 
+    .reminder-panel {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.45);
+    }
+
     .panel h2 {
       font-size: 16.5px;
       margin-bottom: 12px;
       color: #38bdf8;
+    }
+
+    .reminder-panel h2 {
+      color: #fca5a5;
     }
 
     .search-bar {
@@ -312,10 +321,16 @@
       line-height: 1.5;
     }
 
+    .record-card.due-today {
+      border-color: rgba(248, 113, 113, 0.65);
+      background: rgba(127, 29, 29, 0.22);
+    }
+
     .record-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       gap: 8px;
       font-weight: 700;
       color: #ffffff;
@@ -325,8 +340,8 @@
     .record-actions {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 6px;
-      flex-shrink: 0;
     }
 
     .badge {
@@ -346,6 +361,12 @@
       border-color: rgba(245, 158, 11, 0.35);
     }
 
+    .badge-due {
+      background: rgba(239, 68, 68, 0.25);
+      color: #fecaca;
+      border-color: rgba(248, 113, 113, 0.6);
+    }
+
     .btn-edit {
       padding: 4px 10px;
       border-radius: 7px;
@@ -359,6 +380,21 @@
 
     .btn-edit:hover {
       background: rgba(56, 189, 248, 0.25);
+    }
+
+    .btn-followup {
+      padding: 4px 10px;
+      border-radius: 7px;
+      border: 1px solid #22c55e;
+      background: rgba(34, 197, 94, 0.16);
+      color: #86efac;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-followup:hover {
+      background: rgba(34, 197, 94, 0.28);
     }
 
     .btn-cancel-edit {
@@ -379,7 +415,7 @@
       background: rgba(148, 163, 184, 0.12);
     }
 
-    .edit-banner {
+    .mode-banner {
       display: none;
       margin-bottom: 12px;
       padding: 9px 12px;
@@ -389,6 +425,12 @@
       color: #bae6fd;
       font-size: 13px;
       font-weight: 600;
+    }
+
+    .mode-banner.followup {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.45);
+      color: #bbf7d0;
     }
 
     .record-meta {
@@ -473,6 +515,14 @@
       <button type="button" class="btn-logout" id="logoutBtn">Logout</button>
     </div>
 
+    <!-- Aaj / Due Date Reminder Box -->
+    <div class="panel reminder-panel" id="dueReminderPanel">
+      <h2>🔔 Aaj / Due Date Kaam Reminder</h2>
+      <div id="dueReminderList">
+        <p class="empty-note">Reminders check ho rahe hain...</p>
+      </div>
+    </div>
+
     <!-- Top Mobile Search Box -->
     <div class="panel">
       <h2>Mobile Number Se Search</h2>
@@ -496,7 +546,7 @@
     </div>
 
     <div class="grid-2">
-      <!-- Add / Edit Client Form -->
+      <!-- Add / Follow-up / Edit Client Form -->
       <div class="panel">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
           <h2 id="formHeading" style="margin-bottom:0;">Add Client</h2>
@@ -504,9 +554,7 @@
         </div>
 
         <div class="collapsible-form open" id="addClientFormBox">
-          <div class="edit-banner" id="editModeBanner">
-            Purana record edit ho raha hai. Galti sudhar kar "Update Record" dabayein.
-          </div>
+          <div class="mode-banner" id="modeBanner"></div>
 
           <form id="clientForm">
             <div class="row-2">
@@ -561,7 +609,7 @@
             </div>
 
             <button type="submit" class="btn-primary" id="saveClientBtn">Client Record Save Karein</button>
-            <button type="button" class="btn-cancel-edit" id="cancelEditBtn">Edit Cancel Karein</button>
+            <button type="button" class="btn-cancel-edit" id="cancelModeBtn">Cancel Karein</button>
             <div class="status-msg" id="clientFormStatus"></div>
           </form>
         </div>
@@ -594,10 +642,7 @@
       addDoc,
       doc,
       updateDoc,
-      query,
-      orderBy,
-      onSnapshot,
-      serverTimestamp
+      onSnapshot
     } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -623,6 +668,7 @@
     const loggedInUser = document.getElementById("loggedInUser");
     const logoutBtn = document.getElementById("logoutBtn");
 
+    const dueReminderList = document.getElementById("dueReminderList");
     const mobileSearchInput = document.getElementById("mobileSearchInput");
     const mobileSearchResult = document.getElementById("mobileSearchResult");
     const upcomingWorkList = document.getElementById("upcomingWorkList");
@@ -631,17 +677,26 @@
     const toggleAddClientBtn = document.getElementById("toggleAddClientBtn");
     const addClientFormBox = document.getElementById("addClientFormBox");
     const formHeading = document.getElementById("formHeading");
-    const editModeBanner = document.getElementById("editModeBanner");
+    const modeBanner = document.getElementById("modeBanner");
     const clientForm = document.getElementById("clientForm");
     const saveClientBtn = document.getElementById("saveClientBtn");
-    const cancelEditBtn = document.getElementById("cancelEditBtn");
+    const cancelModeBtn = document.getElementById("cancelModeBtn");
     const clientFormStatus = document.getElementById("clientFormStatus");
 
     let allRecords = [];
     let unsubscribeRecords = null;
     let editingRecordId = null;
+    let followupSourceRecordId = null;
 
-    document.getElementById("workDate").valueAsDate = new Date();
+    function getTodayDateString() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const d = String(now.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    document.getElementById("workDate").value = getTodayDateString();
 
     function setBoxMessage(el, message, type = "error") {
       el.textContent = message;
@@ -666,14 +721,31 @@
       return String(val ?? "").replace(/\D/g, "");
     }
 
-    function resetEditMode() {
+    function getRecordTimeMs(r) {
+      if (r.createdAtIso) {
+        const t = Date.parse(r.createdAtIso);
+        if (!Number.isNaN(t)) return t;
+      }
+      if (r.createdAt && typeof r.createdAt.toMillis === "function") {
+        return r.createdAt.toMillis();
+      }
+      if (r.workDate) {
+        const d = Date.parse(r.workDate);
+        if (!Number.isNaN(d)) return d;
+      }
+      return 0;
+    }
+
+    function resetFormMode() {
       editingRecordId = null;
+      followupSourceRecordId = null;
       formHeading.textContent = "Add Client";
-      editModeBanner.style.display = "none";
+      modeBanner.style.display = "none";
+      modeBanner.className = "mode-banner";
       saveClientBtn.textContent = "Client Record Save Karein";
-      cancelEditBtn.style.display = "none";
+      cancelModeBtn.style.display = "none";
       clientForm.reset();
-      document.getElementById("workDate").valueAsDate = new Date();
+      document.getElementById("workDate").value = getTodayDateString();
     }
 
     window.startEditingRecord = function (recordId) {
@@ -681,11 +753,14 @@
       if (!target) return;
 
       editingRecordId = target.id;
+      followupSourceRecordId = null;
       addClientFormBox.classList.add("open");
       formHeading.textContent = "Record Edit Karein";
-      editModeBanner.style.display = "block";
+      modeBanner.textContent = "Purana record edit ho raha hai. Galti sudhar kar 'Update Record' dabayein.";
+      modeBanner.className = "mode-banner";
+      modeBanner.style.display = "block";
       saveClientBtn.textContent = "Update Record";
-      cancelEditBtn.style.display = "block";
+      cancelModeBtn.style.display = "block";
       clearBoxMessage(clientFormStatus);
 
       document.getElementById("clientName").value = target.name || "";
@@ -694,22 +769,63 @@
       document.getElementById("roUvType").value = target.roUv || "RO";
       document.getElementById("totalBill").value = target.totalBill ?? 0;
       document.getElementById("workAndItems").value = target.workAndItems || "";
-      document.getElementById("workDate").value = target.workDate || "";
+      document.getElementById("workDate").value = target.workDate || getTodayDateString();
       document.getElementById("nextDate").value = target.nextDate || "";
 
       clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
 
-    function formatRecordCard(r, showNextBadge = false) {
+    window.startFollowupVisit = function (recordId) {
+      const target = allRecords.find((item) => item.id === recordId);
+      if (!target) return;
+
+      editingRecordId = null;
+      followupSourceRecordId = target.id;
+      addClientFormBox.classList.add("open");
+      formHeading.textContent = "Naya Kaam / Follow-up Entry";
+      modeBanner.textContent = `${target.name} (${target.mobile}) ke liye aaj ki nayi entry bharein: kya kaam kiya, bill, aur nayi Next Date daalein.`;
+      modeBanner.className = "mode-banner followup";
+      modeBanner.style.display = "block";
+      saveClientBtn.textContent = "Nayi Visit Save Karein";
+      cancelModeBtn.style.display = "block";
+      clearBoxMessage(clientFormStatus);
+
+      document.getElementById("clientName").value = target.name || "";
+      document.getElementById("clientMobile").value = target.mobile || "";
+      document.getElementById("clientAddress").value = target.address || "";
+      document.getElementById("roUvType").value = target.roUv || "RO";
+      document.getElementById("totalBill").value = "";
+      document.getElementById("workAndItems").value = "";
+      document.getElementById("workDate").value = getTodayDateString();
+      document.getElementById("nextDate").value = "";
+
+      document.getElementById("workAndItems").focus();
+      clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+
+    function formatRecordCard(r, options = {}) {
+      const { showNextBadge = false, isDue = false } = options;
       const safeId = escapeHtml(r.id);
+      const todayStr = getTodayDateString();
+      const dueNow = isDue || (r.nextDate && r.nextDate <= todayStr);
+
+      let badgeHtml = `<span class="badge">₹${escapeHtml(r.totalBill || 0)}</span>`;
+      if (dueNow && r.nextDate) {
+        const label = r.nextDate === todayStr ? `Aaj Kaam (${escapeHtml(r.nextDate)})` : `Due: ${escapeHtml(r.nextDate)}`;
+        badgeHtml = `<span class="badge badge-due">${label}</span>`;
+      } else if (showNextBadge && r.nextDate) {
+        badgeHtml = `<span class="badge badge-next">Next: ${escapeHtml(r.nextDate)}</span>`;
+      }
+
       return `
-        <div class="record-card">
+        <div class="record-card ${dueNow ? "due-today" : ""}">
           <div class="record-top">
             <span>${escapeHtml(r.name)} (${escapeHtml(r.mobile)})</span>
             <div class="record-actions">
-              <span class="badge ${showNextBadge ? "badge-next" : ""}">
-                ${showNextBadge ? `Next: ${escapeHtml(r.nextDate)}` : `₹${escapeHtml(r.totalBill || 0)}`}
-              </span>
+              ${badgeHtml}
+              <button type="button" class="btn-followup" onclick="window.startFollowupVisit('${safeId}')">
+                Aaj Kaam Karo
+              </button>
               <button type="button" class="btn-edit" onclick="window.startEditingRecord('${safeId}')">
                 Edit
               </button>
@@ -717,7 +833,7 @@
           </div>
           <div class="record-meta">
             <strong>${escapeHtml(r.roUv || "RO/UV")}</strong> • Bill: ₹${escapeHtml(r.totalBill || 0)} • Kaam Date: ${escapeHtml(r.workDate || "-")}
-            ${!showNextBadge && r.nextDate ? ` • Next Date: ${escapeHtml(r.nextDate)}` : ""}
+            ${r.nextDate ? ` • Next Date: ${escapeHtml(r.nextDate)}` : ""}
           </div>
           ${r.address ? `<div class="record-meta">Address: ${escapeHtml(r.address)}</div>` : ""}
           <div class="record-detail">Kaam / Samaan: ${escapeHtml(r.workAndItems || "-")}</div>
@@ -738,7 +854,7 @@
         mobileSearchResult.innerHTML =
           `<div class="record-meta" style="color:#86efac; font-weight:600; margin-bottom:6px;">
             Purana Client Mila (${matches.length} record):
-          </div>` + matches.map((r) => formatRecordCard(r, false)).join("");
+          </div>` + matches.map((r) => formatRecordCard(r, { showNextBadge: false })).join("");
       } else {
         mobileSearchResult.innerHTML = `
           <div class="new-client-prompt">
@@ -754,7 +870,7 @@
         const promptBtn = document.getElementById("promptAddClientBtn");
         if (promptBtn) {
           promptBtn.addEventListener("click", () => {
-            resetEditMode();
+            resetFormMode();
             addClientFormBox.classList.add("open");
             document.getElementById("clientMobile").value = mobileSearchInput.value.trim();
             document.getElementById("clientName").focus();
@@ -764,7 +880,23 @@
       }
     }
 
-    function renderUpcomingAndRecent() {
+    function renderAllLists() {
+      const todayStr = getTodayDateString();
+
+      // Jin clients ki nextDate aaj ki date ya usse pehle ki hai (due / reminder)
+      const dueRecords = allRecords
+        .filter((r) => Boolean(r.nextDate) && r.nextDate <= todayStr)
+        .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
+
+      if (!dueRecords.length) {
+        dueReminderList.innerHTML = `<p class="empty-note">Aaj (${escapeHtml(todayStr)}) ke liye koi due reminder nahi hai.</p>`;
+      } else {
+        dueReminderList.innerHTML = dueRecords
+          .map((r) => formatRecordCard(r, { showNextBadge: true, isDue: true }))
+          .join("");
+      }
+
+      // Search ke neeche: jin-jin ko nextDate di hui hai
       const upcoming = allRecords
         .filter((r) => Boolean(r.nextDate))
         .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
@@ -772,33 +904,38 @@
       if (!upcoming.length) {
         upcomingWorkList.innerHTML = `<p class="empty-note">Abhi kisi client ki Next Date set nahi hai.</p>`;
       } else {
-        upcomingWorkList.innerHTML = upcoming.map((r) => formatRecordCard(r, true)).join("");
+        upcomingWorkList.innerHTML = upcoming
+          .map((r) => formatRecordCard(r, { showNextBadge: true }))
+          .join("");
       }
 
+      // Pichhle kaam
       if (!allRecords.length) {
         recentWorkList.innerHTML = `<p class="empty-note">Abhi koi record save nahi hua hai.</p>`;
       } else {
         recentWorkList.innerHTML = allRecords
           .slice(0, 20)
-          .map((r) => formatRecordCard(r, false))
+          .map((r) => formatRecordCard(r, { showNextBadge: false }))
           .join("");
       }
     }
 
     function startRecordsListener() {
       if (unsubscribeRecords) unsubscribeRecords();
-      const q = query(collection(db, "records"), orderBy("createdAt", "desc"));
       unsubscribeRecords = onSnapshot(
-        q,
+        collection(db, "records"),
         (snapshot) => {
-          allRecords = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-          renderUpcomingAndRecent();
+          allRecords = snapshot.docs
+            .map((d) => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => getRecordTimeMs(b) - getRecordTimeMs(a));
+          renderAllLists();
           renderMobileSearch();
         },
         (err) => {
-          const msg = `<p class="empty-note">Database load nahi ho paaya (Firestore setup/rules check karein): ${escapeHtml(
+          const msg = `<p class="empty-note">Firestore error (Database bana kar Rules publish karein): ${escapeHtml(
             err.message
           )}</p>`;
+          dueReminderList.innerHTML = msg;
           upcomingWorkList.innerHTML = msg;
           recentWorkList.innerHTML = msg;
         }
@@ -912,8 +1049,8 @@
       addClientFormBox.classList.toggle("open");
     });
 
-    cancelEditBtn.addEventListener("click", () => {
-      resetEditMode();
+    cancelModeBtn.addEventListener("click", () => {
+      resetFormMode();
       clearBoxMessage(clientFormStatus);
     });
 
@@ -940,24 +1077,38 @@
           await updateDoc(doc(db, "records", editingRecordId), {
             ...data,
             updatedBy: auth.currentUser?.email || "",
-            updatedAt: serverTimestamp()
+            updatedAtIso: new Date().toISOString()
           });
-          resetEditMode();
+          resetFormMode();
           setBoxMessage(clientFormStatus, "Record safalta se update ho gaya!", "info");
         } else {
+          // Agar follow-up visit save ho rahi hai to purane due reminder ko clear kar dete hain
+          if (followupSourceRecordId) {
+            await updateDoc(doc(db, "records", followupSourceRecordId), {
+              nextDate: "",
+              completedOn: data.workDate,
+              updatedBy: auth.currentUser?.email || "",
+              updatedAtIso: new Date().toISOString()
+            });
+          }
+
           await addDoc(collection(db, "records"), {
             ...data,
             createdBy: auth.currentUser?.email || "",
-            createdAt: serverTimestamp()
+            createdAtIso: new Date().toISOString()
           });
-          resetEditMode();
+          resetFormMode();
           setBoxMessage(clientFormStatus, "Client record safalta se save ho gaya!", "info");
         }
       } catch (err) {
         setBoxMessage(clientFormStatus, "Save/Update karne mein samasya aayi: " + err.message, "error");
       } finally {
         saveClientBtn.disabled = false;
-        saveClientBtn.textContent = editingRecordId ? "Update Record" : "Client Record Save Karein";
+        saveClientBtn.textContent = editingRecordId
+          ? "Update Record"
+          : followupSourceRecordId
+          ? "Nayi Visit Save Karein"
+          : "Client Record Save Karein";
       }
     });
 
