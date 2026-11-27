@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shiv Enterprises Management Software management officer Mandeep and Jagdish</title>
+  <title>Shiv Enterprises Management Software</title>
   <style>
     * {
       box-sizing: border-box;
@@ -644,7 +644,7 @@
   <div class="dashboard" id="dashboardWrap">
     <div class="dash-header">
       <div>
-        <div class="dash-title">Shiv Enterprises Management Software</div>
+        <div class="dash-title">Shiv enterprises management software management officer Mandeep and Jagdish</div>
         <div class="user-email" id="loggedInUser"></div>
       </div>
       <button type="button" class="btn-logout" id="logoutBtn">Logout</button>
@@ -1231,113 +1231,3 @@
     });
 
     emailLinkBtn.addEventListener("click", async () => {
-      clearBoxMessage(statusMsg);
-      const email = document.getElementById("email").value.trim();
-
-      if (!email) {
-        setBoxMessage(statusMsg, "Pehle upar Gmail box mein apna email address likhein.", "error");
-        return;
-      }
-
-      const actionCodeSettings = {
-        url: window.location.origin + window.location.pathname,
-        handleCodeInApp: true
-      };
-
-      emailLinkBtn.disabled = true;
-      emailLinkBtn.textContent = "Link bheja ja raha hai...";
-
-      try {
-        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        window.localStorage.setItem("shivEmailForSignIn", email);
-        setBoxMessage(
-          statusMsg,
-          "Sign-in link " + email + " par bhej diya gaya hai. Gmail inbox (ya Spam) check karke link par tap karein.",
-          "info"
-        );
-      } catch (err) {
-        setBoxMessage(statusMsg, "Link bhejne mein samasya aayi: " + err.message, "error");
-      } finally {
-        emailLinkBtn.disabled = false;
-        emailLinkBtn.textContent = "Gmail Par Sign-In Link Bhejein";
-      }
-    });
-
-    btnReminderMode.addEventListener("click", () => setTopView("reminder"));
-    btnRecentMode.addEventListener("click", () => setTopView("recent"));
-    reminderFilterDate.addEventListener("change", renderTopModeBox);
-
-    toggleAddClientBtn.addEventListener("click", () => {
-      addClientFormBox.classList.toggle("open");
-    });
-
-    cancelModeBtn.addEventListener("click", () => {
-      resetFormMode();
-      clearBoxMessage(clientFormStatus);
-    });
-
-    clientForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      clearBoxMessage(clientFormStatus);
-
-      const data = {
-        name: document.getElementById("clientName").value.trim(),
-        mobile: document.getElementById("clientMobile").value.trim(),
-        address: document.getElementById("clientAddress").value.trim(),
-        roUv: document.getElementById("roUvType").value,
-        totalBill: Number(document.getElementById("totalBill").value || 0),
-        workAndItems: document.getElementById("workAndItems").value.trim(),
-        workDate: document.getElementById("workDate").value,
-        nextDate: document.getElementById("nextDate").value
-      };
-
-      saveClientBtn.disabled = true;
-      saveClientBtn.textContent = editingRecordId ? "Update ho raha hai..." : "Save ho raha hai...";
-
-      try {
-        if (editingRecordId) {
-          await updateDoc(doc(db, "records", editingRecordId), {
-            ...data,
-            updatedBy: auth.currentUser?.email || "",
-            updatedAtIso: new Date().toISOString()
-          });
-          resetFormMode();
-          setBoxMessage(clientFormStatus, "Record safalta se update ho gaya!", "info");
-        } else {
-          if (followupSourceRecordId) {
-            await updateDoc(doc(db, "records", followupSourceRecordId), {
-              nextDate: "",
-              completedOn: data.workDate,
-              updatedBy: auth.currentUser?.email || "",
-              updatedAtIso: new Date().toISOString()
-            });
-          }
-
-          await addDoc(collection(db, "records"), {
-            ...data,
-            createdBy: auth.currentUser?.email || "",
-            createdAtIso: new Date().toISOString()
-          });
-          resetFormMode();
-          setBoxMessage(clientFormStatus, "Client record safalta se save ho gaya!", "info");
-        }
-      } catch (err) {
-        setBoxMessage(clientFormStatus, "Save/Update karne mein samasya aayi: " + err.message, "error");
-      } finally {
-        saveClientBtn.disabled = false;
-        saveClientBtn.textContent = editingRecordId
-          ? "Update Record"
-          : followupSourceRecordId
-          ? "Nayi Visit Save Karein"
-          : "Client Record Save Karein";
-      }
-    });
-
-    mobileSearchInput.addEventListener("input", renderMobileSearch);
-
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-    });
-  </script>
-</body>
-</html>
