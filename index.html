@@ -382,6 +382,21 @@
       background: rgba(56, 189, 248, 0.25);
     }
 
+    .btn-date-change {
+      padding: 4px 10px;
+      border-radius: 7px;
+      border: 1px solid #f59e0b;
+      background: rgba(245, 158, 11, 0.15);
+      color: #fde68a;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-date-change:hover {
+      background: rgba(245, 158, 11, 0.28);
+    }
+
     .btn-followup {
       padding: 4px 10px;
       border-radius: 7px;
@@ -410,6 +425,57 @@
 
     .btn-delete:hover {
       background: rgba(239, 68, 68, 0.3);
+    }
+
+    .inline-date-box {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #131f33;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .inline-date-box.open {
+      display: flex;
+    }
+
+    .inline-date-box input[type="date"] {
+      width: auto;
+      flex: 1;
+      min-width: 155px;
+      padding: 8px 10px;
+      font-size: 13.5px;
+    }
+
+    .btn-save-inline-date {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: none;
+      background: #f59e0b;
+      color: #0b1320;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-save-inline-date:hover {
+      background: #d97706;
+      color: #ffffff;
+    }
+
+    .btn-cancel-inline {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #64748b;
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     .btn-cancel-edit {
@@ -703,6 +769,7 @@
     let unsubscribeRecords = null;
     let editingRecordId = null;
     let followupSourceRecordId = null;
+    let activeInlineDateKey = null;
 
     function getTodayDateString() {
       const now = new Date();
@@ -763,6 +830,30 @@
       clientForm.reset();
       document.getElementById("workDate").value = getTodayDateString();
     }
+
+    window.toggleInlineDateEditor = function (recordId, sectionTag) {
+      const key = `${sectionTag}_${recordId}`;
+      activeInlineDateKey = activeInlineDateKey === key ? null : key;
+      renderAllLists();
+      renderMobileSearch();
+    };
+
+    window.saveInlineNextDate = async function (recordId, inputId) {
+      const dateInput = document.getElementById(inputId);
+      if (!dateInput) return;
+      const newNextDate = dateInput.value;
+
+      try {
+        await updateDoc(doc(db, "records", recordId), {
+          nextDate: newNextDate,
+          updatedBy: auth.currentUser?.email || "",
+          updatedAtIso: new Date().toISOString()
+        });
+        activeInlineDateKey = null;
+      } catch (err) {
+        window.alert("Next date update karne mein samasya aayi: " + err.message);
+      }
+    };
 
     window.startEditingRecord = function (recordId) {
       const target = allRecords.find((item) => item.id === recordId);
@@ -838,8 +929,13 @@
     };
 
     function formatRecordCard(r, options = {}) {
-      const { showNextBadge = false, isDue = false } = options;
+      const { showNextBadge = false, isDue = false, sectionTag = "list" } = options;
       const safeId = escapeHtml(r.id);
+      const safeSection = escapeHtml(sectionTag);
+      const uniqueKey = `${sectionTag}_${r.id}`;
+      const isDateEditorOpen = activeInlineDateKey === uniqueKey;
+      const dateInputId = `inlineNextDate_${safeSection}_${safeId}`;
+
       const todayStr = getTodayDateString();
       const dueNow = isDue || (r.nextDate && r.nextDate <= todayStr);
 
@@ -857,6 +953,9 @@
             <span>${escapeHtml(r.name)} (${escapeHtml(r.mobile)})</span>
             <div class="record-actions">
               ${badgeHtml}
+              <button type="button" class="btn-date-change" onclick="window.toggleInlineDateEditor('${safeId}', '${safeSection}')">
+                Date Badlein
+              </button>
               <button type="button" class="btn-followup" onclick="window.startFollowupVisit('${safeId}')">
                 Aaj Kaam Karo
               </button>
@@ -874,6 +973,17 @@
           </div>
           ${r.address ? `<div class="record-meta">Address: ${escapeHtml(r.address)}</div>` : ""}
           <div class="record-detail">Kaam / Samaan: ${escapeHtml(r.workAndItems || "-")}</div>
+
+          <div class="inline-date-box ${isDateEditorOpen ? "open" : ""}">
+            <span class="record-meta" style="color:#fde68a; font-weight:600;">Nayi Kaam Date:</span>
+            <input type="date" id="${dateInputId}" value="${escapeHtml(r.nextDate || todayStr)}" />
+            <button type="button" class="btn-save-inline-date" onclick="window.saveInlineNextDate('${safeId}', '${dateInputId}')">
+              Save Date
+            </button>
+            <button type="button" class="btn-cancel-inline" onclick="window.toggleInlineDateEditor('${safeId}', '${safeSection}')">
+              Band Karein
+            </button>
+          </div>
         </div>
       `;
     }
@@ -891,7 +1001,7 @@
         mobileSearchResult.innerHTML =
           `<div class="record-meta" style="color:#86efac; font-weight:600; margin-bottom:6px;">
             Purana Client Mila (${matches.length} record):
-          </div>` + matches.map((r) => formatRecordCard(r, { showNextBadge: false })).join("");
+          </div>` + matches.map((r) => formatRecordCard(r, { showNextBadge: false, sectionTag: "search" })).join("");
       } else {
         mobileSearchResult.innerHTML = `
           <div class="new-client-prompt">
@@ -928,7 +1038,7 @@
         dueReminderList.innerHTML = `<p class="empty-note">Aaj (${escapeHtml(todayStr)}) ke liye koi due reminder nahi hai.</p>`;
       } else {
         dueReminderList.innerHTML = dueRecords
-          .map((r) => formatRecordCard(r, { showNextBadge: true, isDue: true }))
+          .map((r) => formatRecordCard(r, { showNextBadge: true, isDue: true, sectionTag: "due" }))
           .join("");
       }
 
@@ -940,7 +1050,7 @@
         upcomingWorkList.innerHTML = `<p class="empty-note">Abhi kisi client ki Next Date set nahi hai.</p>`;
       } else {
         upcomingWorkList.innerHTML = upcoming
-          .map((r) => formatRecordCard(r, { showNextBadge: true }))
+          .map((r) => formatRecordCard(r, { showNextBadge: true, sectionTag: "upcoming" }))
           .join("");
       }
 
@@ -949,7 +1059,7 @@
       } else {
         recentWorkList.innerHTML = allRecords
           .slice(0, 20)
-          .map((r) => formatRecordCard(r, { showNextBadge: false }))
+          .map((r) => formatRecordCard(r, { showNextBadge: false, sectionTag: "recent" }))
           .join("");
       }
     }
