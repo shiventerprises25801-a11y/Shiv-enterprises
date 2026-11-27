@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shiv Enterprises Management Software</title>
+  <title>Shiv Enterprises Management Software
+  management officer Mandeep and Jagdish</title>
   <style>
     * {
       box-sizing: border-box;
@@ -716,9 +717,11 @@
             <div class="form-group">
               <label for="roUvType">RO / UV</label>
               <select id="roUvType" required>
-                <option value="RO">RO</option>
                 <option value="UV">UV</option>
-                <option value="RO + UV">RO + UV</option>
+                <option value="UF">UF</option>
+                <option value="RO">RO</option>
+                <option value="lUV">lUV</option>
+                <option value="Minerals">Minerals</option>
               </select>
             </div>
             <div class="form-group">
@@ -942,7 +945,7 @@
       document.getElementById("clientName").value = target.name || "";
       document.getElementById("clientMobile").value = target.mobile || "";
       document.getElementById("clientAddress").value = target.address || "";
-      document.getElementById("roUvType").value = target.roUv || "RO";
+      document.getElementById("roUvType").value = target.roUv || "UV";
       document.getElementById("totalBill").value = target.totalBill ?? 0;
       document.getElementById("workAndItems").value = target.workAndItems || "";
       document.getElementById("workDate").value = target.workDate || getTodayDateString();
@@ -969,7 +972,7 @@
       document.getElementById("clientName").value = target.name || "";
       document.getElementById("clientMobile").value = target.mobile || "";
       document.getElementById("clientAddress").value = target.address || "";
-      document.getElementById("roUvType").value = target.roUv || "RO";
+      document.getElementById("roUvType").value = target.roUv || "UV";
       document.getElementById("totalBill").value = "";
       document.getElementById("workAndItems").value = "";
       document.getElementById("workDate").value = getTodayDateString();
@@ -1034,7 +1037,7 @@
             </div>
           </div>
           <div class="record-meta">
-            <strong>${escapeHtml(r.roUv || "RO/UV")}</strong> • Bill: ₹${escapeHtml(r.totalBill || 0)} • Kaam Date: ${escapeHtml(r.workDate || "-")}
+            <strong>${escapeHtml(r.roUv || "UV")}</strong> • Bill: ₹${escapeHtml(r.totalBill || 0)} • Kaam Date: ${escapeHtml(r.workDate || "-")}
             ${r.nextDate ? ` • Next Date: ${escapeHtml(r.nextDate)}` : ""}
           </div>
           ${r.address ? `<div class="record-meta">Address: ${escapeHtml(r.address)}</div>` : ""}
@@ -1122,7 +1125,6 @@
               .join("");
         }
       } else {
-        // Last kaam kin ka hua hai (sabse naye save/update hue kaam upar, live update)
         if (!allRecords.length) {
           topModeBoxContent.innerHTML = `
             <div class="mode-subtitle recent-title">Abhi last mein jin clients ka kaam hua hai:</div>
