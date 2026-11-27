@@ -16,11 +16,11 @@
       min-height: 100vh;
       background: #0b1320;
       color: #f8fafc;
-      padding: 20px;
+      padding: 18px;
     }
 
     .center-wrap {
-      min-height: calc(100vh - 40px);
+      min-height: calc(100vh - 36px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -58,7 +58,7 @@
     }
 
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 14px;
     }
 
     label {
@@ -70,7 +70,8 @@
     }
 
     input,
-    select {
+    select,
+    textarea {
       width: 100%;
       padding: 11px 13px;
       border-radius: 10px;
@@ -82,8 +83,14 @@
       transition: border-color 0.2s;
     }
 
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
     input:focus,
-    select:focus {
+    select:focus,
+    textarea:focus {
       border-color: #38bdf8;
     }
 
@@ -145,7 +152,7 @@
     }
 
     .status-msg {
-      margin-top: 14px;
+      margin-top: 12px;
       padding: 10px 12px;
       border-radius: 8px;
       font-size: 13.5px;
@@ -168,7 +175,7 @@
     .dashboard {
       display: none;
       width: 100%;
-      max-width: 980px;
+      max-width: 1060px;
       margin: 0 auto;
     }
 
@@ -176,13 +183,13 @@
       background: #131f33;
       border: 1px solid rgba(148, 163, 184, 0.2);
       border-radius: 16px;
-      padding: 18px 22px;
+      padding: 16px 20px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .dash-title {
@@ -191,18 +198,18 @@
     }
 
     .user-email {
-      font-size: 13px;
+      font-size: 12.5px;
       color: #94a3b8;
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     .btn-logout {
-      padding: 9px 16px;
+      padding: 9px 15px;
       border-radius: 8px;
       border: 1px solid #475569;
       background: #1e293b;
       color: #f8fafc;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -211,24 +218,82 @@
       background: #334155;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
     .panel {
       background: #131f33;
       border: 1px solid rgba(148, 163, 184, 0.2);
       border-radius: 16px;
-      padding: 20px;
+      padding: 18px;
+      margin-bottom: 16px;
     }
 
     .panel h2 {
-      font-size: 17px;
-      margin-bottom: 14px;
+      font-size: 16.5px;
+      margin-bottom: 12px;
       color: #38bdf8;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-icon-badge {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      border-radius: 11px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #38bdf8;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .search-result-box {
+      margin-top: 12px;
+    }
+
+    .new-client-prompt {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .new-client-text {
+      font-size: 14px;
+      color: #fde68a;
+      font-weight: 600;
+    }
+
+    .btn-add-client {
+      padding: 10px 16px;
+      border-radius: 9px;
+      border: none;
+      background: #16a34a;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-add-client:hover {
+      background: #15803d;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 16px;
     }
 
     .row-2 {
@@ -237,7 +302,7 @@
       gap: 12px;
     }
 
-    .record-item {
+    .record-card {
       background: #0b1320;
       border: 1px solid #24344d;
       border-radius: 12px;
@@ -250,10 +315,80 @@
     .record-top {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 8px;
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 4px;
+    }
+
+    .record-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .badge-next {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-edit {
+      padding: 4px 10px;
+      border-radius: 7px;
+      border: 1px solid #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      color: #7dd3fc;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-edit:hover {
+      background: rgba(56, 189, 248, 0.25);
+    }
+
+    .btn-cancel-edit {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #64748b;
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .btn-cancel-edit:hover {
+      background: rgba(148, 163, 184, 0.12);
+    }
+
+    .edit-banner {
+      display: none;
+      margin-bottom: 12px;
+      padding: 9px 12px;
+      border-radius: 9px;
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #bae6fd;
+      font-size: 13px;
+      font-weight: 600;
     }
 
     .record-meta {
@@ -261,10 +396,24 @@
       font-size: 12.5px;
     }
 
+    .record-detail {
+      color: #e2e8f0;
+      margin-top: 4px;
+      white-space: pre-line;
+    }
+
     .empty-note {
       color: #94a3b8;
       font-size: 13.5px;
-      margin-top: 8px;
+      margin-top: 6px;
+    }
+
+    .collapsible-form {
+      display: none;
+    }
+
+    .collapsible-form.open {
+      display: block;
     }
   </style>
 </head>
@@ -324,71 +473,104 @@
       <button type="button" class="btn-logout" id="logoutBtn">Logout</button>
     </div>
 
+    <!-- Top Mobile Search Box -->
+    <div class="panel">
+      <h2>Mobile Number Se Search</h2>
+      <div class="search-bar">
+        <div class="search-icon-badge" title="Mobile Search">🔍</div>
+        <input
+          type="tel"
+          id="mobileSearchInput"
+          placeholder="Mobile number daalein (purani detail ya naya client)..."
+        />
+      </div>
+      <div class="search-result-box" id="mobileSearchResult"></div>
+    </div>
+
+    <!-- Search Ke Neeche: Upcoming / Next Date Work Box -->
+    <div class="panel">
+      <h2>Aage Ka Kaam / Next Date List (Jin-Jin Ka Kaam Karna Hai)</h2>
+      <div id="upcomingWorkList">
+        <p class="empty-note">Records load ho rahe hain...</p>
+      </div>
+    </div>
+
     <div class="grid-2">
-      <!-- Entry Form -->
+      <!-- Add / Edit Client Form -->
       <div class="panel">
-        <h2>Nayi Entry / Record</h2>
-        <form id="entryForm">
-          <div class="row-2">
-            <div class="form-group">
-              <label for="recName">Naam</label>
-              <input type="text" id="recName" placeholder="Poora naam" required />
-            </div>
-            <div class="form-group">
-              <label for="recMobile">Mobile Number</label>
-              <input type="tel" id="recMobile" placeholder="10-ank mobile" required />
-            </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+          <h2 id="formHeading" style="margin-bottom:0;">Add Client</h2>
+          <button type="button" class="btn-add-client" id="toggleAddClientBtn">+ Add Client</button>
+        </div>
+
+        <div class="collapsible-form open" id="addClientFormBox">
+          <div class="edit-banner" id="editModeBanner">
+            Purana record edit ho raha hai. Galti sudhar kar "Update Record" dabayein.
           </div>
 
-          <div class="row-2">
-            <div class="form-group">
-              <label for="recAge">Age</label>
-              <input type="number" id="recAge" placeholder="Age" min="1" max="120" />
+          <form id="clientForm">
+            <div class="row-2">
+              <div class="form-group">
+                <label for="clientName">Naam</label>
+                <input type="text" id="clientName" placeholder="Client ka naam" required />
+              </div>
+              <div class="form-group">
+                <label for="clientMobile">Mobile Number</label>
+                <input type="tel" id="clientMobile" placeholder="10-ank mobile number" required />
+              </div>
             </div>
+
             <div class="form-group">
-              <label for="recVisitDate">Visit Date</label>
-              <input type="date" id="recVisitDate" required />
+              <label for="clientAddress">Address</label>
+              <input type="text" id="clientAddress" placeholder="Poora pata / area" required />
             </div>
-          </div>
 
-          <div class="form-group">
-            <label for="recAddress">Address</label>
-            <input type="text" id="recAddress" placeholder="Pata / Area" />
-          </div>
+            <div class="row-2">
+              <div class="form-group">
+                <label for="roUvType">RO / UV</label>
+                <select id="roUvType" required>
+                  <option value="RO">RO</option>
+                  <option value="UV">UV</option>
+                  <option value="RO + UV">RO + UV</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="totalBill">Total Bill (₹)</label>
+                <input type="number" id="totalBill" placeholder="0" min="0" required />
+              </div>
+            </div>
 
-          <div class="row-2">
             <div class="form-group">
-              <label for="recService">Treatment / Service</label>
-              <input type="text" id="recService" placeholder="Service / Detail" required />
+              <label for="workAndItems">Kya Kaam Kiya / Kya Samaan Diya</label>
+              <textarea
+                id="workAndItems"
+                placeholder="Jaise: RO membrane change, pre-filter, UV lamp, service, etc..."
+                required
+              ></textarea>
             </div>
-            <div class="form-group">
-              <label for="recBilling">Billing Amount (₹)</label>
-              <input type="number" id="recBilling" placeholder="0" min="0" />
+
+            <div class="row-2">
+              <div class="form-group">
+                <label for="workDate">Kis Date Ko Kaam Kiya</label>
+                <input type="date" id="workDate" required />
+              </div>
+              <div class="form-group">
+                <label for="nextDate">Next Date</label>
+                <input type="date" id="nextDate" />
+              </div>
             </div>
-          </div>
 
-          <div class="form-group">
-            <label for="recNextDate">Next Appointment Date</label>
-            <input type="date" id="recNextDate" />
-          </div>
-
-          <button type="submit" class="btn-primary" id="saveEntryBtn">Record Save Karein</button>
-          <div class="status-msg" id="entryStatus"></div>
-        </form>
+            <button type="submit" class="btn-primary" id="saveClientBtn">Client Record Save Karein</button>
+            <button type="button" class="btn-cancel-edit" id="cancelEditBtn">Edit Cancel Karein</button>
+            <div class="status-msg" id="clientFormStatus"></div>
+          </form>
+        </div>
       </div>
 
-      <!-- Lookup & Records -->
+      <!-- Recent Completed Work Box -->
       <div class="panel">
-        <h2>Mobile / Naam Se Search & History</h2>
-        <div class="form-group">
-          <label for="searchInput">Mobile Number ya Naam Khojein</label>
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Mobile number ya naam likhein..."
-          />
-        </div>
-        <div id="recordsList">
+        <h2>Pichhle Kaam (Recent Work History)</h2>
+        <div id="recentWorkList">
           <p class="empty-note">Records load ho rahe hain...</p>
         </div>
       </div>
@@ -410,6 +592,8 @@
       getFirestore,
       collection,
       addDoc,
+      doc,
+      updateDoc,
       query,
       orderBy,
       onSnapshot,
@@ -439,17 +623,25 @@
     const loggedInUser = document.getElementById("loggedInUser");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    const entryForm = document.getElementById("entryForm");
-    const saveEntryBtn = document.getElementById("saveEntryBtn");
-    const entryStatus = document.getElementById("entryStatus");
-    const searchInput = document.getElementById("searchInput");
-    const recordsList = document.getElementById("recordsList");
+    const mobileSearchInput = document.getElementById("mobileSearchInput");
+    const mobileSearchResult = document.getElementById("mobileSearchResult");
+    const upcomingWorkList = document.getElementById("upcomingWorkList");
+    const recentWorkList = document.getElementById("recentWorkList");
+
+    const toggleAddClientBtn = document.getElementById("toggleAddClientBtn");
+    const addClientFormBox = document.getElementById("addClientFormBox");
+    const formHeading = document.getElementById("formHeading");
+    const editModeBanner = document.getElementById("editModeBanner");
+    const clientForm = document.getElementById("clientForm");
+    const saveClientBtn = document.getElementById("saveClientBtn");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
+    const clientFormStatus = document.getElementById("clientFormStatus");
 
     let allRecords = [];
     let unsubscribeRecords = null;
+    let editingRecordId = null;
 
-    // Default visit date = aaj ki date
-    document.getElementById("recVisitDate").valueAsDate = new Date();
+    document.getElementById("workDate").valueAsDate = new Date();
 
     function setBoxMessage(el, message, type = "error") {
       el.textContent = message;
@@ -470,45 +662,127 @@
         .replace(/"/g, "&quot;");
     }
 
-    function renderRecords() {
-      const q = searchInput.value.trim().toLowerCase();
-      const filtered = allRecords.filter((r) => {
-        if (!q) return true;
-        const name = (r.name || "").toLowerCase();
-        const mobile = (r.mobile || "").toLowerCase();
-        const service = (r.service || "").toLowerCase();
-        return name.includes(q) || mobile.includes(q) || service.includes(q);
-      });
+    function cleanMobile(val) {
+      return String(val ?? "").replace(/\D/g, "");
+    }
 
-      if (!filtered.length) {
-        recordsList.innerHTML = `<p class="empty-note">Koi record nahi mila.</p>`;
+    function resetEditMode() {
+      editingRecordId = null;
+      formHeading.textContent = "Add Client";
+      editModeBanner.style.display = "none";
+      saveClientBtn.textContent = "Client Record Save Karein";
+      cancelEditBtn.style.display = "none";
+      clientForm.reset();
+      document.getElementById("workDate").valueAsDate = new Date();
+    }
+
+    window.startEditingRecord = function (recordId) {
+      const target = allRecords.find((item) => item.id === recordId);
+      if (!target) return;
+
+      editingRecordId = target.id;
+      addClientFormBox.classList.add("open");
+      formHeading.textContent = "Record Edit Karein";
+      editModeBanner.style.display = "block";
+      saveClientBtn.textContent = "Update Record";
+      cancelEditBtn.style.display = "block";
+      clearBoxMessage(clientFormStatus);
+
+      document.getElementById("clientName").value = target.name || "";
+      document.getElementById("clientMobile").value = target.mobile || "";
+      document.getElementById("clientAddress").value = target.address || "";
+      document.getElementById("roUvType").value = target.roUv || "RO";
+      document.getElementById("totalBill").value = target.totalBill ?? 0;
+      document.getElementById("workAndItems").value = target.workAndItems || "";
+      document.getElementById("workDate").value = target.workDate || "";
+      document.getElementById("nextDate").value = target.nextDate || "";
+
+      clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+
+    function formatRecordCard(r, showNextBadge = false) {
+      const safeId = escapeHtml(r.id);
+      return `
+        <div class="record-card">
+          <div class="record-top">
+            <span>${escapeHtml(r.name)} (${escapeHtml(r.mobile)})</span>
+            <div class="record-actions">
+              <span class="badge ${showNextBadge ? "badge-next" : ""}">
+                ${showNextBadge ? `Next: ${escapeHtml(r.nextDate)}` : `₹${escapeHtml(r.totalBill || 0)}`}
+              </span>
+              <button type="button" class="btn-edit" onclick="window.startEditingRecord('${safeId}')">
+                Edit
+              </button>
+            </div>
+          </div>
+          <div class="record-meta">
+            <strong>${escapeHtml(r.roUv || "RO/UV")}</strong> • Bill: ₹${escapeHtml(r.totalBill || 0)} • Kaam Date: ${escapeHtml(r.workDate || "-")}
+            ${!showNextBadge && r.nextDate ? ` • Next Date: ${escapeHtml(r.nextDate)}` : ""}
+          </div>
+          ${r.address ? `<div class="record-meta">Address: ${escapeHtml(r.address)}</div>` : ""}
+          <div class="record-detail">Kaam / Samaan: ${escapeHtml(r.workAndItems || "-")}</div>
+        </div>
+      `;
+    }
+
+    function renderMobileSearch() {
+      const digits = cleanMobile(mobileSearchInput.value);
+      if (!digits) {
+        mobileSearchResult.innerHTML = "";
         return;
       }
 
-      recordsList.innerHTML = filtered
-        .slice(0, 30)
-        .map(
-          (r) => `
-          <div class="record-item">
-            <div class="record-top">
-              <span>${escapeHtml(r.name)} (${escapeHtml(r.mobile)})</span>
-              <span>₹${escapeHtml(r.billing || 0)}</span>
+      const matches = allRecords.filter((r) => cleanMobile(r.mobile).includes(digits));
+
+      if (matches.length > 0) {
+        mobileSearchResult.innerHTML =
+          `<div class="record-meta" style="color:#86efac; font-weight:600; margin-bottom:6px;">
+            Purana Client Mila (${matches.length} record):
+          </div>` + matches.map((r) => formatRecordCard(r, false)).join("");
+      } else {
+        mobileSearchResult.innerHTML = `
+          <div class="new-client-prompt">
+            <div class="new-client-text">
+              Naya mobile number (${escapeHtml(mobileSearchInput.value.trim())}) — purana record nahi mila.
             </div>
-            <div class="record-meta">
-              Service: ${escapeHtml(r.service)} | Visit: ${escapeHtml(r.visitDate || "-")}
-              ${r.nextAppointment ? ` | Next: ${escapeHtml(r.nextAppointment)}` : ""}
-            </div>
-            ${
-              r.age || r.address
-                ? `<div class="record-meta">${r.age ? `Age: ${escapeHtml(r.age)}` : ""}${
-                    r.age && r.address ? " • " : ""
-                  }${r.address ? `Address: ${escapeHtml(r.address)}` : ""}</div>`
-                : ""
-            }
+            <button type="button" class="btn-add-client" id="promptAddClientBtn">
+              Add Client
+            </button>
           </div>
-        `
-        )
-        .join("");
+        `;
+
+        const promptBtn = document.getElementById("promptAddClientBtn");
+        if (promptBtn) {
+          promptBtn.addEventListener("click", () => {
+            resetEditMode();
+            addClientFormBox.classList.add("open");
+            document.getElementById("clientMobile").value = mobileSearchInput.value.trim();
+            document.getElementById("clientName").focus();
+            clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          });
+        }
+      }
+    }
+
+    function renderUpcomingAndRecent() {
+      const upcoming = allRecords
+        .filter((r) => Boolean(r.nextDate))
+        .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
+
+      if (!upcoming.length) {
+        upcomingWorkList.innerHTML = `<p class="empty-note">Abhi kisi client ki Next Date set nahi hai.</p>`;
+      } else {
+        upcomingWorkList.innerHTML = upcoming.map((r) => formatRecordCard(r, true)).join("");
+      }
+
+      if (!allRecords.length) {
+        recentWorkList.innerHTML = `<p class="empty-note">Abhi koi record save nahi hua hai.</p>`;
+      } else {
+        recentWorkList.innerHTML = allRecords
+          .slice(0, 20)
+          .map((r) => formatRecordCard(r, false))
+          .join("");
+      }
     }
 
     function startRecordsListener() {
@@ -517,13 +791,16 @@
       unsubscribeRecords = onSnapshot(
         q,
         (snapshot) => {
-          allRecords = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          renderRecords();
+          allRecords = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+          renderUpcomingAndRecent();
+          renderMobileSearch();
         },
         (err) => {
-          recordsList.innerHTML = `<p class="empty-note">Database load nahi ho paaya (Firestore rules/setup check karein): ${escapeHtml(
+          const msg = `<p class="empty-note">Database load nahi ho paaya (Firestore setup/rules check karein): ${escapeHtml(
             err.message
           )}</p>`;
+          upcomingWorkList.innerHTML = msg;
+          recentWorkList.innerHTML = msg;
         }
       );
     }
@@ -631,40 +908,60 @@
       }
     });
 
-    entryForm.addEventListener("submit", async (e) => {
+    toggleAddClientBtn.addEventListener("click", () => {
+      addClientFormBox.classList.toggle("open");
+    });
+
+    cancelEditBtn.addEventListener("click", () => {
+      resetEditMode();
+      clearBoxMessage(clientFormStatus);
+    });
+
+    clientForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      clearBoxMessage(entryStatus);
+      clearBoxMessage(clientFormStatus);
 
       const data = {
-        name: document.getElementById("recName").value.trim(),
-        mobile: document.getElementById("recMobile").value.trim(),
-        age: document.getElementById("recAge").value.trim(),
-        address: document.getElementById("recAddress").value.trim(),
-        visitDate: document.getElementById("recVisitDate").value,
-        service: document.getElementById("recService").value.trim(),
-        billing: Number(document.getElementById("recBilling").value || 0),
-        nextAppointment: document.getElementById("recNextDate").value,
-        createdBy: auth.currentUser?.email || "",
-        createdAt: serverTimestamp()
+        name: document.getElementById("clientName").value.trim(),
+        mobile: document.getElementById("clientMobile").value.trim(),
+        address: document.getElementById("clientAddress").value.trim(),
+        roUv: document.getElementById("roUvType").value,
+        totalBill: Number(document.getElementById("totalBill").value || 0),
+        workAndItems: document.getElementById("workAndItems").value.trim(),
+        workDate: document.getElementById("workDate").value,
+        nextDate: document.getElementById("nextDate").value
       };
 
-      saveEntryBtn.disabled = true;
-      saveEntryBtn.textContent = "Save ho raha hai...";
+      saveClientBtn.disabled = true;
+      saveClientBtn.textContent = editingRecordId ? "Update ho raha hai..." : "Save ho raha hai...";
 
       try {
-        await addDoc(collection(db, "records"), data);
-        entryForm.reset();
-        document.getElementById("recVisitDate").valueAsDate = new Date();
-        setBoxMessage(entryStatus, "Record safalta se save ho gaya!", "info");
+        if (editingRecordId) {
+          await updateDoc(doc(db, "records", editingRecordId), {
+            ...data,
+            updatedBy: auth.currentUser?.email || "",
+            updatedAt: serverTimestamp()
+          });
+          resetEditMode();
+          setBoxMessage(clientFormStatus, "Record safalta se update ho gaya!", "info");
+        } else {
+          await addDoc(collection(db, "records"), {
+            ...data,
+            createdBy: auth.currentUser?.email || "",
+            createdAt: serverTimestamp()
+          });
+          resetEditMode();
+          setBoxMessage(clientFormStatus, "Client record safalta se save ho gaya!", "info");
+        }
       } catch (err) {
-        setBoxMessage(entryStatus, "Save karne mein samasya aayi: " + err.message, "error");
+        setBoxMessage(clientFormStatus, "Save/Update karne mein samasya aayi: " + err.message, "error");
       } finally {
-        saveEntryBtn.disabled = false;
-        saveEntryBtn.textContent = "Record Save Karein";
+        saveClientBtn.disabled = false;
+        saveClientBtn.textContent = editingRecordId ? "Update Record" : "Client Record Save Karein";
       }
     });
 
-    searchInput.addEventListener("input", renderRecords);
+    mobileSearchInput.addEventListener("input", renderMobileSearch);
 
     logoutBtn.addEventListener("click", async () => {
       await signOut(auth);
