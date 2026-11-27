@@ -397,6 +397,21 @@
       background: rgba(34, 197, 94, 0.28);
     }
 
+    .btn-delete {
+      padding: 4px 10px;
+      border-radius: 7px;
+      border: 1px solid rgba(248, 113, 113, 0.65);
+      background: rgba(239, 68, 68, 0.16);
+      color: #fca5a5;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
     .btn-cancel-edit {
       width: 100%;
       padding: 10px 14px;
@@ -642,6 +657,7 @@
       addDoc,
       doc,
       updateDoc,
+      deleteDoc,
       onSnapshot
     } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
@@ -803,6 +819,24 @@
       clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
 
+    window.deleteRecordPermanently = async function (recordId) {
+      const target = allRecords.find((item) => item.id === recordId);
+      const label = target ? `${target.name || "Client"} (${target.mobile || ""})` : "ye record";
+      const ok = window.confirm(
+        `Kya aap waqai "${label}" ka record hamesha (permanently) delete karna chahte hain? Ye wapas nahi aayega.`
+      );
+      if (!ok) return;
+
+      try {
+        await deleteDoc(doc(db, "records", recordId));
+        if (editingRecordId === recordId || followupSourceRecordId === recordId) {
+          resetFormMode();
+        }
+      } catch (err) {
+        window.alert("Record delete karne mein samasya aayi: " + err.message);
+      }
+    };
+
     function formatRecordCard(r, options = {}) {
       const { showNextBadge = false, isDue = false } = options;
       const safeId = escapeHtml(r.id);
@@ -828,6 +862,9 @@
               </button>
               <button type="button" class="btn-edit" onclick="window.startEditingRecord('${safeId}')">
                 Edit
+              </button>
+              <button type="button" class="btn-delete" onclick="window.deleteRecordPermanently('${safeId}')">
+                Delete
               </button>
             </div>
           </div>
@@ -883,7 +920,6 @@
     function renderAllLists() {
       const todayStr = getTodayDateString();
 
-      // Jin clients ki nextDate aaj ki date ya usse pehle ki hai (due / reminder)
       const dueRecords = allRecords
         .filter((r) => Boolean(r.nextDate) && r.nextDate <= todayStr)
         .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
@@ -896,7 +932,6 @@
           .join("");
       }
 
-      // Search ke neeche: jin-jin ko nextDate di hui hai
       const upcoming = allRecords
         .filter((r) => Boolean(r.nextDate))
         .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
@@ -909,7 +944,6 @@
           .join("");
       }
 
-      // Pichhle kaam
       if (!allRecords.length) {
         recentWorkList.innerHTML = `<p class="empty-note">Abhi koi record save nahi hua hai.</p>`;
       } else {
@@ -1082,7 +1116,6 @@
           resetFormMode();
           setBoxMessage(clientFormStatus, "Record safalta se update ho gaya!", "info");
         } else {
-          // Agar follow-up visit save ho rahi hai to purane due reminder ko clear kar dete hain
           if (followupSourceRecordId) {
             await updateDoc(doc(db, "records", followupSourceRecordId), {
               nextDate: "",
