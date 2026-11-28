@@ -1,1619 +1,2085 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Shiv enterprises management software management officer Mandeep and Jagdish</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      background: #0b1320;
-      color: #f8fafc;
-      padding: 18px;
-    }
-
-    .center-wrap {
-      min-height: calc(100vh - 36px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 430px;
-      background: #131f33;
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 16px;
-      padding: 28px 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-    }
-
-    .brand-tag {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #38bdf8;
-      background: rgba(56, 189, 248, 0.12);
-      padding: 5px 10px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      font-size: 20px;
-      line-height: 1.35;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 22px;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    label {
-      display: block;
-      font-size: 13.5px;
-      font-weight: 600;
-      color: #cbd5e1;
-      margin-bottom: 6px;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 11px 13px;
-      border-radius: 10px;
-      border: 1px solid #334155;
-      background: #0b1320;
-      color: #ffffff;
-      font-size: 14.5px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    textarea {
-      min-height: 82px;
-      resize: vertical;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #38bdf8;
-    }
-
-    .btn-primary {
-      width: 100%;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 10px;
-      background: #0284c7;
-      color: #ffffff;
-      font-size: 15.5px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 4px;
-      transition: background 0.2s;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: #0369a1;
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 18px 0 14px;
-      color: #94a3b8;
-      font-size: 12.5px;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: rgba(148, 163, 184, 0.2);
-    }
-
-    .btn-secondary {
-      width: 100%;
-      padding: 11px 14px;
-      border-radius: 10px;
-      border: 1px solid #475569;
-      background: #1e293b;
-      color: #e2e8f0;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-secondary:hover:not(:disabled) {
-      background: #334155;
-    }
-
-    .status-msg {
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 13.5px;
-      line-height: 1.45;
-      display: none;
-      word-break: break-word;
-    }
-
-    .status-error {
-      background: rgba(239, 68, 68, 0.16);
-      border: 1px solid rgba(239, 68, 68, 0.45);
-      color: #fca5a5;
-    }
-
-    .status-info {
-      background: rgba(34, 197, 94, 0.16);
-      border: 1px solid rgba(34, 197, 94, 0.45);
-      color: #86efac;
-    }
-
-    /* Dashboard */
-    .dashboard {
-      display: none;
-      width: 100%;
-      max-width: 1080px;
-      margin: 0 auto;
-    }
-
-    .dash-header {
-      background: #131f33;
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 16px;
-      padding: 16px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .dash-title {
-      font-size: 19px;
-      font-weight: 700;
-      line-height: 1.35;
-    }
-
-    .user-email {
-      font-size: 12.5px;
-      color: #94a3b8;
-      margin-top: 4px;
-    }
-
-    .btn-logout {
-      padding: 9px 15px;
-      border-radius: 8px;
-      border: 1px solid #475569;
-      background: #1e293b;
-      color: #f8fafc;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-logout:hover {
-      background: #334155;
-    }
-
-    .panel {
-      background: #131f33;
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .panel h2 {
-      font-size: 16.5px;
-      margin-bottom: 12px;
-      color: #38bdf8;
-    }
-
-    .top-action-buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .top-mode-btn {
-      padding: 13px 16px;
-      border-radius: 12px;
-      border: 1px solid #475569;
-      background: #0b1320;
-      color: #e2e8f0;
-      font-size: 14.5px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-    }
-
-    .top-mode-btn:hover {
-      border-color: #38bdf8;
-    }
-
-    .top-mode-btn.active-reminder {
-      background: rgba(245, 158, 11, 0.18);
-      border-color: #f59e0b;
-      color: #fde68a;
-    }
-
-    .top-mode-btn.active-recent {
-      background: rgba(56, 189, 248, 0.18);
-      border-color: #38bdf8;
-      color: #bae6fd;
-    }
-
-    .top-mode-btn.active-history {
-      background: rgba(168, 85, 247, 0.18);
-      border-color: #a855f7;
-      color: #e9d5ff;
-    }
-
-    .reminder-date-picker-row {
-      display: none;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 12px;
-      border-radius: 12px;
-      background: #0b1320;
-      border: 1px solid rgba(245, 158, 11, 0.4);
-      margin-bottom: 12px;
-    }
-
-    .reminder-date-picker-row.open {
-      display: flex;
-    }
-
-    .reminder-date-picker-row label {
-      margin: 0;
-      color: #fde68a;
-      font-size: 13.5px;
-    }
-
-    .reminder-date-picker-row input[type="date"] {
-      width: auto;
-      min-width: 175px;
-      padding: 9px 12px;
-    }
-
-    .mode-subtitle {
-      font-size: 14px;
-      font-weight: 700;
-      color: #fde68a;
-      margin-bottom: 8px;
-    }
-
-    .mode-subtitle.recent-title {
-      color: #7dd3fc;
-    }
-
-    .mode-subtitle.history-title {
-      color: #d8b4fe;
-    }
-
-    /* Alag Box: Next Date Aane Par Entry Box */
-    .next-entry-box {
-      display: none;
-      background: rgba(34, 197, 94, 0.08);
-      border: 1px solid rgba(34, 197, 94, 0.55);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .next-entry-box.open {
-      display: block;
-    }
-
-    .next-entry-box h2 {
-      font-size: 16.5px;
-      margin-bottom: 10px;
-      color: #86efac;
-    }
-
-    .prev-client-summary {
-      background: #0b1320;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 14px;
-      font-size: 13.5px;
-      line-height: 1.55;
-      color: #e2e8f0;
-    }
-
-    /* Alag Box: Aage Ki Next Date Dene Par Client Detail Box */
-    .future-next-box {
-      background: rgba(245, 158, 11, 0.07);
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .future-next-box h2 {
-      font-size: 16.5px;
-      margin-bottom: 10px;
-      color: #fcd34d;
-    }
-
-    /* Client History Alag Box */
-    .client-history-box {
-      display: none;
-      background: rgba(168, 85, 247, 0.08);
-      border: 1px solid rgba(168, 85, 247, 0.45);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .client-history-box.open {
-      display: block;
-    }
-
-    .client-history-box h2 {
-      font-size: 16.5px;
-      margin-bottom: 10px;
-      color: #d8b4fe;
-    }
-
-    .search-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .search-icon-badge {
-      width: 44px;
-      height: 44px;
-      flex-shrink: 0;
-      border-radius: 11px;
-      background: rgba(56, 189, 248, 0.14);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #38bdf8;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .search-result-box {
-      margin-top: 12px;
-    }
-
-    .new-client-prompt {
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      border-radius: 12px;
-      padding: 14px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .new-client-text {
-      font-size: 14px;
-      color: #fde68a;
-      font-weight: 600;
-    }
-
-    .btn-add-client {
-      padding: 10px 16px;
-      border-radius: 9px;
-      border: none;
-      background: #16a34a;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-add-client:hover {
-      background: #15803d;
-    }
-
-    .row-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-    }
-
-    .record-card {
-      background: #0b1320;
-      border: 1px solid #24344d;
-      border-radius: 12px;
-      padding: 13px 14px;
-      margin-top: 10px;
-      font-size: 13.5px;
-      line-height: 1.5;
-    }
-
-    .record-card.due-today {
-      border-color: rgba(245, 158, 11, 0.65);
-      background: rgba(120, 53, 15, 0.22);
-    }
-
-    .record-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 4px;
-    }
-
-    .record-actions {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 11.5px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.15);
-      color: #7dd3fc;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-    }
-
-    .badge-next {
-      background: rgba(245, 158, 11, 0.15);
-      color: #fcd34d;
-      border-color: rgba(245, 158, 11, 0.35);
-    }
-
-    .btn-edit {
-      padding: 4px 10px;
-      border-radius: 7px;
-      border: 1px solid #38bdf8;
-      background: rgba(56, 189, 248, 0.12);
-      color: #7dd3fc;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-edit:hover {
-      background: rgba(56, 189, 248, 0.25);
-    }
-
-    .btn-date-change {
-      padding: 4px 10px;
-      border-radius: 7px;
-      border: 1px solid #f59e0b;
-      background: rgba(245, 158, 11, 0.15);
-      color: #fde68a;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-date-change:hover {
-      background: rgba(245, 158, 11, 0.28);
-    }
-
-    .btn-followup {
-      padding: 4px 10px;
-      border-radius: 7px;
-      border: 1px solid #22c55e;
-      background: rgba(34, 197, 94, 0.16);
-      color: #86efac;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-followup:hover {
-      background: rgba(34, 197, 94, 0.28);
-    }
-
-    .btn-delete {
-      padding: 4px 10px;
-      border-radius: 7px;
-      border: 1px solid rgba(248, 113, 113, 0.65);
-      background: rgba(239, 68, 68, 0.16);
-      color: #fca5a5;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-delete:hover {
-      background: rgba(239, 68, 68, 0.3);
-    }
-
-    .inline-date-box {
-      display: none;
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 10px;
-      background: #131f33;
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .inline-date-box.open {
-      display: flex;
-    }
-
-    .inline-date-box input[type="date"] {
-      width: auto;
-      flex: 1;
-      min-width: 155px;
-      padding: 8px 10px;
-      font-size: 13.5px;
-    }
-
-    .btn-save-inline-date {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: none;
-      background: #f59e0b;
-      color: #0b1320;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-save-inline-date:hover {
-      background: #d97706;
-      color: #ffffff;
-    }
-
-    .btn-cancel-inline {
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid #64748b;
-      background: transparent;
-      color: #cbd5e1;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-cancel-edit {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid #64748b;
-      background: transparent;
-      color: #cbd5e1;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 8px;
-      display: none;
-    }
-
-    .btn-cancel-edit:hover {
-      background: rgba(148, 163, 184, 0.12);
-    }
-
-    .mode-banner {
-      display: none;
-      margin-bottom: 12px;
-      padding: 9px 12px;
-      border-radius: 9px;
-      background: rgba(56, 189, 248, 0.14);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      color: #bae6fd;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .record-meta {
-      color: #94a3b8;
-      font-size: 12.5px;
-    }
-
-    .record-detail {
-      color: #e2e8f0;
-      margin-top: 4px;
-      white-space: pre-line;
-    }
-
-    .empty-note {
-      color: #94a3b8;
-      font-size: 13.5px;
-      margin-top: 6px;
-    }
-
-    .collapsible-form {
-      display: none;
-    }
-
-    .collapsible-form.open {
-      display: block;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Health Care Centre Management Software</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --accent: #0284c7;
+            --bg-dark: #0f2027;
+            --bg-mid: #203a43;
+            --bg-light: #f8fafc;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #cbd5e1;
+            --danger: #dc2626;
+            --success: #15803d;
+            --whatsapp: #16a34a;
+            --warning-bg: #fffbeb;
+            --warning-border: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-mid), #2c5364);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            color: var(--text);
+        }
+
+        .top-header {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            padding: 18px 16px;
+            margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .top-header h1 {
+            font-size: 1.55rem;
+            font-weight: 700;
+        }
+
+        .top-header p {
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            margin-top: 4px;
+        }
+
+        .login-box {
+            background: #ffffff;
+            width: 100%;
+            max-width: 420px;
+            padding: 32px 24px;
+            border-radius: 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            margin-top: 12px;
+        }
+
+        .login-box h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .login-sub {
+            text-align: center;
+            font-size: 0.84rem;
+            color: var(--muted);
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 13px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.92rem;
+            outline: none;
+            background: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .extra-phone-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .extra-phone-row input {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            width: 100%;
+            padding: 12px;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-sm {
+            padding: 7px 12px;
+            font-size: 0.82rem;
+            border-radius: 8px;
+            color: #fff;
+            background: var(--primary);
+        }
+
+        .btn-blue {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-wa {
+            background: var(--whatsapp);
+            color: #fff;
+            margin-top: 8px;
+        }
+
+        .btn-gray {
+            background: #64748b;
+            color: #fff;
+        }
+
+        .error-text {
+            color: var(--danger);
+            font-size: 0.84rem;
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
+            word-break: break-word;
+        }
+
+        .info-text {
+            color: var(--primary-dark);
+            font-size: 0.84rem;
+            text-align: center;
+            margin-top: 8px;
+            min-height: 18px;
+        }
+
+        .dashboard {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            background: var(--bg-light);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .dash-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            background: #ccfbf1;
+            color: var(--primary-dark);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .doc-search-bar {
+            background: #ffffff;
+            border: 1.5px solid #99f6e4;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+        }
+
+        .doc-search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8fafc;
+            border: 1.5px solid var(--primary);
+            border-radius: 12px;
+            padding: 6px 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-icon {
+            font-size: 1.15rem;
+            color: var(--primary-dark);
+            user-select: none;
+        }
+
+        .doc-search-box input {
+            flex: 1;
+            min-width: 180px;
+            border: none;
+            background: transparent;
+            font-size: 0.96rem;
+            padding: 6px 4px;
+            outline: none;
+        }
+
+        .upcoming-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .upcoming-bar input[type="date"] {
+            padding: 8px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+
+        .upcoming-item {
+            padding: 12px;
+            border-radius: 10px;
+            background: #f0fdfa;
+            border: 1px solid #99f6e4;
+            margin-bottom: 10px;
+        }
+
+        .edit-box {
+            background: var(--warning-bg);
+            border: 1.5px solid var(--warning-border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+        }
+
+        .card h3 {
+            color: var(--primary);
+            font-size: 1.06rem;
+            margin-bottom: 12px;
+        }
+
+        .token-banner {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #ecfdf5;
+            border: 1.5px solid #10b981;
+            color: #065f46;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .queue-item, .seen-item, .biodata-item {
+            padding: 12px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 10px;
+        }
+
+        .biodata-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .token-pill {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+        }
+
+        .patient-summary {
+            background: #f0fdfa;
+            border: 1px solid #99f6e4;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .date-visit-box {
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-left: 5px solid var(--primary);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        }
+
+        .date-visit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .date-visit-badge {
+            display: inline-block;
+            background: #ccfbf1;
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 0.86rem;
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        .visit-detail-row {
+            font-size: 0.88rem;
+            margin-bottom: 5px;
+            line-height: 1.45;
+        }
+
+        .visit-file-preview {
+            margin-top: 8px;
+            max-width: 100%;
+            max-height: 220px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            display: block;
+        }
+
+        .main-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1.5px solid var(--primary);
+            background: #fff;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 0.84rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 600px) {
+            .top-header h1 {
+                font-size: 1.25rem;
+            }
+            .dashboard {
+                padding: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Login View -->
-  <div class="center-wrap" id="loginWrap">
-    <div class="login-card">
-      <div class="brand-tag">Authorized Access</div>
-      <h1>Shiv enterprises management software management officer Mandeep and Jagdish</h1>
+    <header class="top-header">
+        <h1>Family Health Care Centre Management Software</h1>
+        <p id="headerSubtitle">Authorized Clinic Login</p>
+    </header>
 
-      <form id="loginForm" novalidate>
-        <div class="form-group">
-          <label for="email">Gmail</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="example@gmail.com"
-            autocomplete="email"
-          />
-        </div>
+    <div class="login-box" id="loginSection">
+        <h2>Clinic Login</h2>
+        <p class="login-sub">Apne registered Gmail aur Password se login karein</p>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Apna password darj karein"
-            autocomplete="current-password"
-          />
-        </div>
-
-        <button type="submit" class="btn-primary" id="loginBtn">Login</button>
-
-        <div class="divider">YA</div>
-
-        <button type="button" class="btn-secondary" id="emailLinkBtn">
-          Gmail Par Sign-In Link Bhejein
-        </button>
-
-        <div class="status-msg" id="statusMsg"></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Dashboard View -->
-  <div class="dashboard" id="dashboardWrap">
-    <div class="dash-header">
-      <div>
-        <div class="dash-title">Shiv enterprises management software management officer Mandeep and Jagdish</div>
-        <div class="user-email" id="loggedInUser"></div>
-      </div>
-      <button type="button" class="btn-logout" id="logoutBtn">Logout</button>
-    </div>
-
-    <!-- Top Mobile Search Box -->
-    <div class="panel">
-      <h2>Mobile Number Se Search</h2>
-      <div class="search-bar">
-        <div class="search-icon-badge" title="Mobile Search">🔍</div>
-        <input
-          type="tel"
-          id="mobileSearchInput"
-          placeholder="Mobile number daalein (purani detail ya naya client)..."
-        />
-      </div>
-      <div class="search-result-box" id="mobileSearchResult"></div>
-    </div>
-
-    <!-- Upar Action Buttons + Niche Box -->
-    <div class="panel">
-      <div class="top-action-buttons">
-        <button type="button" class="top-mode-btn active-reminder" id="btnReminderMode">
-          📅 Jinka Kaam Karna Hai Reminder
-        </button>
-        <button type="button" class="top-mode-btn" id="btnRecentMode">
-          🕒 Last Kaam Kin Ka Hua Hai
-        </button>
-        <button type="button" class="top-mode-btn" id="btnClientHistoryToggle">
-          📜 Client History
-        </button>
-      </div>
-
-      <div class="reminder-date-picker-row open" id="reminderDateRow">
-        <label for="reminderFilterDate">Date Choose Karein:</label>
-        <input type="date" id="reminderFilterDate" />
-      </div>
-
-      <div id="topModeBoxContent">
-        <p class="empty-note">Records load ho rahe hain...</p>
-      </div>
-    </div>
-
-    <!-- Alag Box: Client History (Button Dabane Par Khulta Hai) -->
-    <div class="client-history-box" id="clientHistoryBox">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;">
-        <h2 style="margin-bottom:0;">📜 Client History</h2>
-        <button type="button" class="btn-cancel-inline" id="closeClientHistoryBtn">Band Karein</button>
-      </div>
-      <div class="form-group" style="margin-bottom:10px;">
-        <input
-          type="text"
-          id="historyFilterInput"
-          placeholder="Client naam ya mobile number se history chhaantein (ya sab dekhein)..."
-        />
-      </div>
-      <div id="clientHistoryList">
-        <p class="empty-note">History load ho rahi hai...</p>
-      </div>
-    </div>
-
-    <!-- Alag Box: Next Date Aane Par Client Ki Entry Box -->
-    <div class="next-entry-box" id="nextDateEntryBox">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;">
-        <h2 style="margin-bottom:0;">📝 Next Date Kaam Entry Box</h2>
-        <button type="button" class="btn-cancel-inline" id="closeNextEntryBoxBtn">Band Karein</button>
-      </div>
-
-      <div class="prev-client-summary" id="prevClientSummaryBox"></div>
-
-      <form id="nextDateEntryForm">
-        <div class="row-2">
-          <div class="form-group">
-            <label for="nextVisitWorkDate">Aaj / Is Next Date Ko Kis Date Ko Kaam Kiya</label>
-            <input type="date" id="nextVisitWorkDate" required />
-          </div>
-          <div class="form-group">
-            <label for="nextVisitBill">Total Bill (₹)</label>
-            <input type="number" id="nextVisitBill" placeholder="0" min="0" required />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="nextVisitWorkItems">Is Baar Kya Kaam Kiya / Kya Samaan Diya</label>
-          <textarea
-            id="nextVisitWorkItems"
-            placeholder="Aaj jo kaam kiya ya samaan diya uski poori detail likhein..."
-            required
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="nextVisitFutureDate">Aage Ki Next Date (Dobara Kab Jana Hai)</label>
-          <input type="date" id="nextVisitFutureDate" />
-        </div>
-
-        <button type="submit" class="btn-primary" id="saveNextVisitBtn">
-          Next Date Ki Entry Save Karein
-        </button>
-        <div class="status-msg" id="nextVisitStatus"></div>
-      </form>
-    </div>
-
-    <!-- Alag Box: Jin Clients Ko Aage Ki Next Date Di Gayi Hai Unki Poori Detail -->
-    <div class="future-next-box" id="futureNextDetailBox">
-      <h2>📌 Aage Ki Next Date Detail Box (Jin Clients Ko Aage Ki Date Di Gayi Hai)</h2>
-      <div id="futureNextDetailList">
-        <p class="empty-note">Records load ho rahe hain...</p>
-      </div>
-    </div>
-
-    <!-- Add / Edit Client Form -->
-    <div class="panel">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-        <h2 id="formHeading" style="margin-bottom:0;">Add Client</h2>
-        <button type="button" class="btn-add-client" id="toggleAddClientBtn">+ Add Client</button>
-      </div>
-
-      <div class="collapsible-form open" id="addClientFormBox">
-        <div class="mode-banner" id="modeBanner"></div>
-
-        <form id="clientForm">
-          <div class="row-2">
+        <form id="loginForm" action="javascript:void(0);">
             <div class="form-group">
-              <label for="clientName">Naam</label>
-              <input type="text" id="clientName" placeholder="Client ka naam" required />
+                <label for="loginEmail">Gmail ID</label>
+                <input type="email" id="loginEmail" placeholder="doctor@gmail.com ya reception@gmail.com" required>
             </div>
             <div class="form-group">
-              <label for="clientMobile">Mobile Number</label>
-              <input type="tel" id="clientMobile" placeholder="10-ank mobile number" required />
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" required>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label for="clientAddress">Address</label>
-            <input type="text" id="clientAddress" placeholder="Poora pata / area" required />
-          </div>
-
-          <div class="row-2">
-            <div class="form-group">
-              <label for="roUvType">RO / UV</label>
-              <select id="roUvType" required>
-                <option value="UV">UV</option>
-                <option value="UF">UF</option>
-                <option value="RO">RO</option>
-                <option value="lUV">lUV</option>
-                <option value="Minerals">Minerals</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="totalBill">Total Bill (₹)</label>
-              <input type="number" id="totalBill" placeholder="0" min="0" required />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="workAndItems">Kya Kaam Kiya / Kya Samaan Diya</label>
-            <textarea
-              id="workAndItems"
-              placeholder="Jaise: RO membrane change, pre-filter, UV lamp, service, etc..."
-              required
-            ></textarea>
-          </div>
-
-          <div class="row-2">
-            <div class="form-group">
-              <label for="workDate">Kis Date Ko Kaam Kiya</label>
-              <input type="date" id="workDate" required />
-            </div>
-            <div class="form-group">
-              <label for="nextDate">Next Date</label>
-              <input type="date" id="nextDate" />
-            </div>
-          </div>
-
-          <button type="submit" class="btn-primary" id="saveClientBtn">Client Record Save Karein</button>
-          <button type="button" class="btn-cancel-edit" id="cancelModeBtn">Cancel Karein</button>
-          <div class="status-msg" id="clientFormStatus"></div>
+            <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+            <p class="info-text" id="loginStatus"></p>
+            <p class="error-text" id="loginError"></p>
         </form>
-      </div>
     </div>
-  </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      sendSignInLinkToEmail,
-      isSignInWithEmailLink,
-      signInWithEmailLink,
-      signOut,
-      onAuthStateChanged,
-      setPersistence,
-      browserLocalPersistence
-    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      doc,
-      updateDoc,
-      deleteDoc,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyALwvUvNPNCug9IJUwjaCRYLcD66nko8mo",
-      authDomain: "shiv-enterprises-ccc3e.firebaseapp.com",
-      projectId: "shiv-enterprises-ccc3e",
-      storageBucket: "shiv-enterprises-ccc3e.firebasestorage.app",
-      messagingSenderId: "80655329898",
-      appId: "1:80655329898:web:7936e35f008cc87f927813",
-      measurementId: "G-G2EX0ZSCEG"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    setPersistence(auth, browserLocalPersistence).catch(() => {});
-
-    const loginWrap = document.getElementById("loginWrap");
-    const dashboardWrap = document.getElementById("dashboardWrap");
-    const loginForm = document.getElementById("loginForm");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const emailLinkBtn = document.getElementById("emailLinkBtn");
-    const statusMsg = document.getElementById("statusMsg");
-    const loggedInUser = document.getElementById("loggedInUser");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    const btnReminderMode = document.getElementById("btnReminderMode");
-    const btnRecentMode = document.getElementById("btnRecentMode");
-    const btnClientHistoryToggle = document.getElementById("btnClientHistoryToggle");
-    const reminderDateRow = document.getElementById("reminderDateRow");
-    const reminderFilterDate = document.getElementById("reminderFilterDate");
-    const topModeBoxContent = document.getElementById("topModeBoxContent");
-
-    const clientHistoryBox = document.getElementById("clientHistoryBox");
-    const closeClientHistoryBtn = document.getElementById("closeClientHistoryBtn");
-    const historyFilterInput = document.getElementById("historyFilterInput");
-    const clientHistoryList = document.getElementById("clientHistoryList");
-
-    const nextDateEntryBox = document.getElementById("nextDateEntryBox");
-    const closeNextEntryBoxBtn = document.getElementById("closeNextEntryBoxBtn");
-    const prevClientSummaryBox = document.getElementById("prevClientSummaryBox");
-    const nextDateEntryForm = document.getElementById("nextDateEntryForm");
-    const nextVisitWorkDate = document.getElementById("nextVisitWorkDate");
-    const nextVisitBill = document.getElementById("nextVisitBill");
-    const nextVisitWorkItems = document.getElementById("nextVisitWorkItems");
-    const nextVisitFutureDate = document.getElementById("nextVisitFutureDate");
-    const saveNextVisitBtn = document.getElementById("saveNextVisitBtn");
-    const nextVisitStatus = document.getElementById("nextVisitStatus");
-
-    const futureNextDetailList = document.getElementById("futureNextDetailList");
-
-    const mobileSearchInput = document.getElementById("mobileSearchInput");
-    const mobileSearchResult = document.getElementById("mobileSearchResult");
-
-    const toggleAddClientBtn = document.getElementById("toggleAddClientBtn");
-    const addClientFormBox = document.getElementById("addClientFormBox");
-    const formHeading = document.getElementById("formHeading");
-    const modeBanner = document.getElementById("modeBanner");
-    const clientForm = document.getElementById("clientForm");
-    const saveClientBtn = document.getElementById("saveClientBtn");
-    const cancelModeBtn = document.getElementById("cancelModeBtn");
-    const clientFormStatus = document.getElementById("clientFormStatus");
-
-    let allRecords = [];
-    let unsubscribeRecords = null;
-    let editingRecordId = null;
-    let followupSourceRecord = null;
-    let activeInlineDateKey = null;
-    let activeTopView = "reminder"; // "reminder" | "recent"
-
-    function getTodayDateString() {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, "0");
-      const d = String(now.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
-
-    const todayStr = getTodayDateString();
-    document.getElementById("workDate").value = todayStr;
-    reminderFilterDate.value = todayStr;
-    nextVisitWorkDate.value = todayStr;
-
-    function setBoxMessage(el, message, type = "error") {
-      el.textContent = message;
-      el.className = "status-msg " + (type === "info" ? "status-info" : "status-error");
-      el.style.display = "block";
-    }
-
-    function clearBoxMessage(el) {
-      el.textContent = "";
-      el.style.display = "none";
-    }
-
-    function escapeHtml(str) {
-      return String(str ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-    }
-
-    function cleanMobile(val) {
-      return String(val ?? "").replace(/\D/g, "");
-    }
-
-    function getRecordTimeMs(r) {
-      if (r.createdAtIso) {
-        const t = Date.parse(r.createdAtIso);
-        if (!Number.isNaN(t)) return t;
-      }
-      if (r.createdAt && typeof r.createdAt.toMillis === "function") {
-        return r.createdAt.toMillis();
-      }
-      if (r.workDate) {
-        const d = Date.parse(r.workDate);
-        if (!Number.isNaN(d)) return d;
-      }
-      return 0;
-    }
-
-    function resetFormMode() {
-      editingRecordId = null;
-      formHeading.textContent = "Add Client";
-      modeBanner.style.display = "none";
-      modeBanner.className = "mode-banner";
-      saveClientBtn.textContent = "Client Record Save Karein";
-      cancelModeBtn.style.display = "none";
-      clientForm.reset();
-      document.getElementById("workDate").value = getTodayDateString();
-    }
-
-    function closeNextEntryBox() {
-      followupSourceRecord = null;
-      nextDateEntryBox.classList.remove("open");
-      nextDateEntryForm.reset();
-      nextVisitWorkDate.value = getTodayDateString();
-      clearBoxMessage(nextVisitStatus);
-    }
-
-    function setTopView(viewName) {
-      activeTopView = viewName;
-      if (viewName === "reminder") {
-        btnReminderMode.classList.add("active-reminder");
-        btnRecentMode.classList.remove("active-recent");
-        reminderDateRow.classList.add("open");
-      } else {
-        btnRecentMode.classList.add("active-recent");
-        btnReminderMode.classList.remove("active-reminder");
-        reminderDateRow.classList.remove("open");
-      }
-      renderTopModeBox();
-    }
-
-    window.toggleInlineDateEditor = function (recordId, sectionTag) {
-      const key = `${sectionTag}_${recordId}`;
-      activeInlineDateKey = activeInlineDateKey === key ? null : key;
-      renderAllViews();
-    };
-
-    window.saveInlineNextDate = async function (recordId, inputId) {
-      const dateInput = document.getElementById(inputId);
-      if (!dateInput) return;
-      const newNextDate = dateInput.value;
-
-      try {
-        await updateDoc(doc(db, "records", recordId), {
-          nextDate: newNextDate,
-          updatedBy: auth.currentUser?.email || "",
-          updatedAtIso: new Date().toISOString()
-        });
-        activeInlineDateKey = null;
-      } catch (err) {
-        window.alert("Next date update karne mein samasya aayi: " + err.message);
-      }
-    };
-
-    window.startEditingRecord = function (recordId) {
-      const target = allRecords.find((item) => item.id === recordId);
-      if (!target) return;
-
-      editingRecordId = target.id;
-      addClientFormBox.classList.add("open");
-      formHeading.textContent = "Record Edit Karein";
-      modeBanner.textContent = "Purana record edit ho raha hai. Galti sudhar kar 'Update Record' dabayein.";
-      modeBanner.className = "mode-banner";
-      modeBanner.style.display = "block";
-      saveClientBtn.textContent = "Update Record";
-      cancelModeBtn.style.display = "block";
-      clearBoxMessage(clientFormStatus);
-
-      document.getElementById("clientName").value = target.name || "";
-      document.getElementById("clientMobile").value = target.mobile || "";
-      document.getElementById("clientAddress").value = target.address || "";
-      document.getElementById("roUvType").value = target.roUv || "UV";
-      document.getElementById("totalBill").value = target.totalBill ?? 0;
-      document.getElementById("workAndItems").value = target.workAndItems || "";
-      document.getElementById("workDate").value = target.workDate || getTodayDateString();
-      document.getElementById("nextDate").value = target.nextDate || "";
-
-      clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    };
-
-    window.startFollowupVisit = function (recordId) {
-      const target = allRecords.find((item) => item.id === recordId);
-      if (!target) return;
-
-      followupSourceRecord = { ...target };
-      clearBoxMessage(nextVisitStatus);
-      nextVisitWorkDate.value = getTodayDateString();
-      nextVisitBill.value = "";
-      nextVisitWorkItems.value = "";
-      nextVisitFutureDate.value = "";
-
-      prevClientSummaryBox.innerHTML = `
-        <div style="font-weight:700; color:#86efac; margin-bottom:4px;">
-          Client: ${escapeHtml(target.name || "-")} (${escapeHtml(target.mobile || "-")})
-        </div>
-        <div><strong>Type:</strong> ${escapeHtml(target.roUv || "UV")} • <strong>Address:</strong> ${escapeHtml(target.address || "-")}</div>
-        <div><strong>Pichhli Kaam Date:</strong> ${escapeHtml(target.workDate || "-")} • <strong>Pichhla Bill:</strong> ₹${escapeHtml(target.totalBill || 0)} • <strong>Set Next Date:</strong> ${escapeHtml(target.nextDate || "-")}</div>
-        <div style="margin-top:4px;"><strong>Pichhla Kaam / Samaan:</strong> ${escapeHtml(target.workAndItems || "-")}</div>
-      `;
-
-      nextDateEntryBox.classList.add("open");
-      nextVisitWorkItems.focus();
-      nextDateEntryBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    };
-
-    window.deleteRecordPermanently = async function (recordId) {
-      const target = allRecords.find((item) => item.id === recordId);
-      const label = target ? `${target.name || "Client"} (${target.mobile || ""})` : "ye record";
-      const ok = window.confirm(
-        `Kya aap waqai "${label}" ka record hamesha (permanently) delete karna chahte hain? Ye wapas nahi aayega.`
-      );
-      if (!ok) return;
-
-      try {
-        await deleteDoc(doc(db, "records", recordId));
-        if (editingRecordId === recordId) {
-          resetFormMode();
-        }
-        if (followupSourceRecord && followupSourceRecord.id === recordId) {
-          closeNextEntryBox();
-        }
-      } catch (err) {
-        window.alert("Record delete karne mein samasya aayi: " + err.message);
-      }
-    };
-
-    function formatRecordCard(r, options = {}) {
-      const { showNextBadge = false, isDue = false, sectionTag = "list" } = options;
-      const safeId = escapeHtml(r.id);
-      const safeSection = escapeHtml(sectionTag);
-      const uniqueKey = `${sectionTag}_${r.id}`;
-      const isDateEditorOpen = activeInlineDateKey === uniqueKey;
-      const dateInputId = `inlineNextDate_${safeSection}_${safeId}`;
-      const currentToday = getTodayDateString();
-
-      let badgeHtml = `<span class="badge">₹${escapeHtml(r.totalBill || 0)}</span>`;
-      if (isDue && r.nextDate) {
-        badgeHtml = `<span class="badge badge-next">Date: ${escapeHtml(r.nextDate)}</span>`;
-      } else if (showNextBadge && r.nextDate) {
-        badgeHtml = `<span class="badge badge-next">Next: ${escapeHtml(r.nextDate)}</span>`;
-      }
-
-      return `
-        <div class="record-card ${isDue ? "due-today" : ""}">
-          <div class="record-top">
-            <span>${escapeHtml(r.name)} (${escapeHtml(r.mobile)})</span>
-            <div class="record-actions">
-              ${badgeHtml}
-              <button type="button" class="btn-date-change" onclick="window.toggleInlineDateEditor('${safeId}', '${safeSection}')">
-                Date Badlein
-              </button>
-              <button type="button" class="btn-followup" onclick="window.startFollowupVisit('${safeId}')">
-                Aaj Kaam Karo
-              </button>
-              <button type="button" class="btn-edit" onclick="window.startEditingRecord('${safeId}')">
-                Edit
-              </button>
-              <button type="button" class="btn-delete" onclick="window.deleteRecordPermanently('${safeId}')">
-                Delete
-              </button>
+    <div class="dashboard" id="dashboardSection">
+        <div class="dash-top">
+            <div>
+                <span id="roleTitle" style="font-weight:700; font-size:1.15rem; color:#0f766e;">Dashboard</span>
+                <span class="role-badge" id="roleBadge">ROLE</span>
+                <div class="muted" id="loggedUserEmail"></div>
             </div>
-          </div>
-          <div class="record-meta">
-            <strong>${escapeHtml(r.roUv || "UV")}</strong> • Bill: ₹${escapeHtml(r.totalBill || 0)} • Kaam Date: ${escapeHtml(r.workDate || "-")}
-            ${r.nextDate ? ` • Next Date: ${escapeHtml(r.nextDate)}` : ""}
-          </div>
-          ${r.address ? `<div class="record-meta">Address: ${escapeHtml(r.address)}</div>` : ""}
-          <div class="record-detail">Kaam / Samaan: ${escapeHtml(r.workAndItems || "-")}</div>
-
-          <div class="inline-date-box ${isDateEditorOpen ? "open" : ""}">
-            <span class="record-meta" style="color:#fde68a; font-weight:600;">Nayi Kaam Date:</span>
-            <input type="date" id="${dateInputId}" value="${escapeHtml(r.nextDate || currentToday)}" />
-            <button type="button" class="btn-save-inline-date" onclick="window.saveInlineNextDate('${safeId}', '${dateInputId}')">
-              Save Date
-            </button>
-            <button type="button" class="btn-cancel-inline" onclick="window.toggleInlineDateEditor('${safeId}', '${safeSection}')">
-              Band Karein
-            </button>
-          </div>
+            <button class="btn btn-danger btn-sm" id="logoutBtn">Logout</button>
         </div>
-      `;
-    }
 
-    function renderMobileSearch() {
-      const digits = cleanMobile(mobileSearchInput.value);
-      if (!digits) {
-        mobileSearchResult.innerHTML = "";
-        return;
-      }
-
-      const matches = allRecords.filter((r) => cleanMobile(r.mobile).includes(digits));
-
-      if (matches.length > 0) {
-        mobileSearchResult.innerHTML =
-          `<div class="record-meta" style="color:#86efac; font-weight:600; margin-bottom:6px;">
-            Purana Client Mila (${matches.length} record):
-          </div>` + matches.map((r) => formatRecordCard(r, { showNextBadge: false, sectionTag: "search" })).join("");
-      } else {
-        mobileSearchResult.innerHTML = `
-          <div class="new-client-prompt">
-            <div class="new-client-text">
-              Naya mobile number (${escapeHtml(mobileSearchInput.value.trim())}) — purana record nahi mila.
+        <div id="doctorInstantSection" class="hidden">
+            <div class="doc-search-bar">
+                <label for="docTopMobileSearch" style="display:block; font-size:0.85rem; font-weight:600; color:#0f766e; margin-bottom:6px;">
+                    Patient Mobile Number Search (Main ya Koi Bhi Extra Number Daalein)
+                </label>
+                <div class="doc-search-box">
+                    <span class="search-icon" aria-hidden="true">🔍</span>
+                    <input type="tel" id="docTopMobileSearch" placeholder="Patient ka main ya alternate mobile number daalein..." oninput="handleDoctorMobileLookup()">
+                    <button type="button" class="btn btn-sm btn-blue" onclick="handleDoctorMobileLookup()">Search</button>
+                    <button type="button" class="btn btn-sm btn-gray" onclick="clearDoctorMobileLookup()">Clear</button>
+                </div>
+                <div class="token-banner" id="docActionBanner"></div>
             </div>
-            <button type="button" class="btn-add-client" id="promptAddClientBtn">
-              Add Client
-            </button>
-          </div>
-        `;
 
-        const promptBtn = document.getElementById("promptAddClientBtn");
-        if (promptBtn) {
-          promptBtn.addEventListener("click", () => {
-            resetFormMode();
-            addClientFormBox.classList.add("open");
-            document.getElementById("clientMobile").value = mobileSearchInput.value.trim();
-            document.getElementById("clientName").focus();
-            clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
-          });
+            <div class="card">
+                <div class="biodata-top" style="margin-bottom:10px;">
+                    <h3 id="scheduledPatientsHeading" style="margin-bottom:0;">Aane Wale Patients (Reminder)</h3>
+                    <button type="button" class="btn btn-sm btn-blue" onclick="toggleScheduleDatePicker()">
+                        📅 Date Chunein / Reminder
+                    </button>
+                </div>
+
+                <div id="schedulePickerRow" class="upcoming-bar">
+                    <label for="scheduleDateFilter" style="font-size:0.86rem; font-weight:600; color:#334155;">Date:</label>
+                    <input type="date" id="scheduleDateFilter" onchange="renderScheduledPatientsByDate()">
+                    <button type="button" class="btn btn-sm" onclick="setScheduleDateToToday()">Aaj Ki Date</button>
+                </div>
+
+                <div id="scheduledPatientsList">
+                    <p class="muted">Is date ke liye koi pending patient nahi hai.</p>
+                </div>
+            </div>
+
+            <div class="edit-box hidden" id="editSavedPatientCard">
+                <h3 style="color:#b45309; margin-bottom:10px;">Saved Patient Profile Edit Karein</h3>
+                <form id="editSavedPatientForm" action="javascript:void(0);">
+                    <div class="form-group">
+                        <label>Patient ka Naam *</label>
+                        <input type="text" id="editPatName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Main Mobile Number *</label>
+                        <input type="tel" id="editPatMobile" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Extra / Alternate Numbers</label>
+                        <div id="editExtraPhonesContainer"></div>
+                        <button type="button" class="btn btn-sm btn-blue" style="margin-top:8px;" onclick="addExtraPhoneRow('editExtraPhonesContainer')">
+                            ➕ Add More Number
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label>Age (Umra)</label>
+                        <input type="number" id="editPatAge" min="1" max="120">
+                    </div>
+                    <div class="form-group">
+                        <label>Address (Pata)</label>
+                        <input type="text" id="editPatAddress">
+                    </div>
+                    <div class="form-group">
+                        <label>Problem / Treatment</label>
+                        <textarea id="editPatProblem" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Kya Diya Tha (Medicine / Kit / Therapy)</label>
+                        <input type="text" id="editPatGiven" placeholder="Jo dawai / cheez di gayi ho">
+                    </div>
+                    <div class="form-group">
+                        <label>Bill Kitna Bana Hai (₹)</label>
+                        <input type="number" id="editPatBill" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Next Date</label>
+                        <input type="date" id="editPatNextDate">
+                    </div>
+                    <div class="action-btns">
+                        <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
+                        <button type="button" class="btn btn-sm btn-gray" onclick="cancelEditSavedPatient()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <div class="card" id="doctorLookupResultCard">
+                        <h3 id="lookupCardTitle">Mobile Search Result</h3>
+                        <div id="doctorLookupBody">
+                            <p class="muted">Upar patient ka koi bhi mobile number daalein—purana patient hoga toh har visit ki date-wise detail alag box mein aayegi, naya hoga toh Add Patient form khulega.</p>
+                        </div>
+                    </div>
+
+                    <div class="card hidden" id="doctorNewPatientCard">
+                        <h3>Naya Patient Add Karein (Direct Save — No Waiting)</h3>
+                        <form id="docNewPatientForm" action="javascript:void(0);">
+                            <div class="form-group">
+                                <label>1. Patient ka Naam *</label>
+                                <input type="text" id="docNewName" required placeholder="Patient ka poora naam">
+                            </div>
+                            <div class="form-group">
+                                <label>2. Main Mobile Number *</label>
+                                <input type="tel" id="docNewMobile" required placeholder="10 digit mobile number">
+                                <div id="docNewExtraPhonesContainer"></div>
+                                <button type="button" class="btn btn-sm btn-blue" style="margin-top:8px;" onclick="addExtraPhoneRow('docNewExtraPhonesContainer')">
+                                    ➕ Add More Number
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label>3. Age (Umra) *</label>
+                                <input type="number" id="docNewAge" required min="1" max="120" placeholder="Saal mein umra">
+                            </div>
+                            <div class="form-group">
+                                <label>4. Address (Pata) *</label>
+                                <input type="text" id="docNewAddress" required placeholder="Gaon / Mohalla / Shehar">
+                            </div>
+                            <div class="form-group">
+                                <label>5. Kis Date Ka Aaya Hai (Visit Date) *</label>
+                                <input type="date" id="docNewVisitDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>6. Kya Ilaaj / Treatment Hua Hai *</label>
+                                <textarea id="docNewTreatment" rows="2" required placeholder="Kiye gaye ilaaj / treatment ki detail"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>7. Kya Diya Tha (Medicine / Therapy / Item)</label>
+                                <input type="text" id="docNewGiven" placeholder="Dawai, oil, plaster, belt ya jo diya ho">
+                            </div>
+                            <div class="form-group">
+                                <label>8. Treatment File / Report / Photo Upload (Optional)</label>
+                                <input type="file" id="docNewFile" accept="image/*,.pdf,.doc,.docx">
+                            </div>
+                            <div class="form-group">
+                                <label>9. Bill Kitna Bana Hai (₹) *</label>
+                                <input type="number" id="docNewBill" min="0" required placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>10. Next Date Kab Ki Hai *</label>
+                                <input type="date" id="docNewNextDate" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="docSaveNewPatientBtn">Save Patient</button>
+                        </form>
+                    </div>
+
+                    <div class="card hidden" id="doctorExistingUpdateCard">
+                        <div class="biodata-top">
+                            <h3 style="margin-bottom:0;">Date-Wise Visit Boxes</h3>
+                            <button type="button" class="btn btn-sm btn-blue" onclick="focusNewVisitForm()">
+                                ➕ Ek Aur Visit Box Jorein
+                            </button>
+                        </div>
+                        <div id="docExistingHistoryBox" style="margin-top:10px; margin-bottom:14px;"></div>
+
+                        <h3 id="addVisitBoxTitle">Nayi Visit Entry & File Upload (Alag Naya Box Banega)</h3>
+                        <form id="docUpdateExistingForm" action="javascript:void(0);">
+                            <div class="form-group">
+                                <label>Age (Umra)</label>
+                                <input type="number" id="docUpdAge" min="1" max="120" placeholder="Saal mein umra">
+                            </div>
+                            <div class="form-group">
+                                <label>Address (Pata)</label>
+                                <input type="text" id="docUpdAddress" placeholder="Gaon / Mohalla / Shehar">
+                            </div>
+                            <div class="form-group">
+                                <label>Visit Date (Kis Tarikh Ki Visit Hai) *</label>
+                                <input type="date" id="docUpdVisitDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Kya Ilaaj / Treatment Hua Hai *</label>
+                                <textarea id="docUpdTreatment" rows="2" required placeholder="Is visit mein kya ilaaj / treatment hua"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Kya Diya Tha (Medicine / Therapy / Item)</label>
+                                <input type="text" id="docUpdGiven" placeholder="Dawai, oil, plaster, belt ya jo diya ho">
+                            </div>
+                            <div class="form-group">
+                                <label>Treatment File / Report / Photo Upload (Optional)</label>
+                                <input type="file" id="docUpdFile" accept="image/*,.pdf,.doc,.docx">
+                            </div>
+                            <div class="form-group">
+                                <label>Bill Kitna Bana Tha (₹) *</label>
+                                <input type="number" id="docUpdBill" min="0" required placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Next Date Kab Ki Hai (New Appointment Date) *</label>
+                                <input type="date" id="docUpdNextDate" required>
+                            </div>
+                            <button type="submit" class="btn btn-success" style="width:100%; padding:11px;">Save Nayi Visit (Alag Box Mein)</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card">
+                        <div class="biodata-top" style="margin-bottom:0;">
+                            <h3 style="margin-bottom:0;">Patients Biodata List (<span id="shownPatientsCount">0</span> / <span id="totalPatientsCount">0</span>)</h3>
+                            <button type="button" class="btn btn-sm btn-blue" id="toggleBiodataListBtn" onclick="toggleBiodataListVisibility()">
+                                📋 Biodata List Kholein
+                            </button>
+                        </div>
+                        <div id="biodataCollapsibleBody" class="hidden" style="margin-top:12px;">
+                            <div id="lastPatientsBiodataList">
+                                <p class="muted">Abhi koi patient record nahi hai.</p>
+                            </div>
+                            <div id="loadMorePatientsWrap" class="hidden" style="margin-top:10px; text-align:center;">
+                                <button type="button" class="btn btn-sm btn-blue" id="loadMorePatientsBtn" onclick="loadMorePatientsBatch()">
+                                    Aur 15 Patients Dekhein
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Waiting List (<span id="waitingCountDoc">0</span>)</h3>
+                        <div id="doctorWaitingList">
+                            <p class="muted">Abhi waiting mein koi patient nahi hai.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="receptionSection" class="hidden">
+            <div class="main-tabs">
+                <button class="tab-btn active" id="tabAddBtn" onclick="switchMainTab('add')">Add New Patient</button>
+                <button class="tab-btn" id="tabHistoryBtn" onclick="switchMainTab('history')">Patient History</button>
+            </div>
+
+            <div id="addTabContent">
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Add New Patient</h3>
+                        <form id="addPatientForm" action="javascript:void(0);">
+                            <div class="form-group">
+                                <label>Patient Name (Mareez ka Naam) *</label>
+                                <input type="text" id="pName" required placeholder="Poora naam likhein">
+                            </div>
+                            <div class="form-group">
+                                <label>Main Mobile Number *</label>
+                                <input type="tel" id="pMobile" required placeholder="10 digit mobile number">
+                                <div id="recExtraPhonesContainer"></div>
+                                <button type="button" class="btn btn-sm btn-blue" style="margin-top:8px;" onclick="addExtraPhoneRow('recExtraPhonesContainer')">
+                                    ➕ Add More Number
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label>Age (Umra) *</label>
+                                <input type="number" id="pAge" required min="1" max="120" placeholder="Saal mein umra">
+                            </div>
+                            <div class="form-group">
+                                <label>Gender (Ling)</label>
+                                <select id="pGender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Address (Pata) *</label>
+                                <input type="text" id="pAddress" required placeholder="Gaon / Mohalla / Shehar">
+                            </div>
+                            <div class="form-group">
+                                <label>Kya Dikkat Hai (Problem / Symptoms) *</label>
+                                <textarea id="pProblem" rows="3" required placeholder="Mareez ki samasya ya lakshan likhein"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="savePatientBtn">Save & Add to Waiting</button>
+                        </form>
+                        <div class="token-banner" id="tokenResultBox"></div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Current Waiting List (<span id="waitingCountRec">0</span> Patients)</h3>
+                        <p class="muted" style="margin-bottom: 10px;">Mareez ko unka waiting number yahan se batayein:</p>
+                        <div id="receptionWaitingList">
+                            <p class="muted">Abhi waiting list khaali hai.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="historyTabContent" class="hidden">
+                <div class="card">
+                    <h3>Patient History (Main ya Extra Number Se Search Karein)</h3>
+                    <div class="search-row" style="display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;">
+                        <input type="tel" id="searchMobileInput" placeholder="Mobile number daalein..." style="flex:1; min-width:200px; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px;">
+                        <button class="btn btn-sm btn-blue" onclick="searchPatientByMobile()">Search</button>
+                    </div>
+                    <div id="receptionHistoryResult">
+                        <p class="muted">Kisi patient ka koi bhi mobile number search karein.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyDF4uLFVQqujkp6LgoSs29_CN0FeSC65qY",
+            authDomain: "family-health-care-centre.firebaseapp.com",
+            projectId: "family-health-care-centre"
+        };
+
+        const DOCTOR_EMAILS = [
+            "mohitbhargava0001@gmail.com"
+        ];
+
+        const WHATSAPP_GROUP_INVITE_LINK = "";
+        const PATIENTS_PAGE_SIZE = 15;
+        const VISITS_COLLECTION = "Visits";
+
+        const SESSION_STORAGE_KEY = "fhcc_clinic_session_v1";
+        const FIRESTORE_BASE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_CONFIG.projectId}/databases/(default)/documents`;
+
+        const statusEl = document.getElementById("loginStatus");
+        const errEl = document.getElementById("loginError");
+        const loginForm = document.getElementById("loginForm");
+        const loginBtn = document.getElementById("loginBtn");
+
+        let authToken = null;
+        let currentUid = null;
+        let currentEmail = null;
+        let currentRole = "reception";
+        let isLoggedInSession = false;
+        let patientsCache = [];
+        let appointmentsCache = [];
+        let visitsCache = [];
+        let activeDoctorPatientId = null;
+        let editingPatientId = null;
+        let visiblePatientsLimit = PATIENTS_PAGE_SIZE;
+        let isBiodataListOpen = false;
+        let nextTokenCounter = 1;
+
+        function getLocalTodayISO() {
+            const now = new Date();
+            const offsetMs = now.getTimezoneOffset() * 60000;
+            return new Date(now.getTime() - offsetMs).toISOString().split("T")[0];
         }
-      }
-    }
 
-    function renderTopModeBox() {
-      if (activeTopView === "reminder") {
-        const chosenDate = reminderFilterDate.value;
-        const headingText = chosenDate
-          ? `${escapeHtml(chosenDate)} date ko aapko inka kaam karna hai:`
-          : "Upar se date choose karein — is date ko aapko inka kaam karna hai:";
+        const todayISO = () => getLocalTodayISO();
+        document.getElementById("docNewVisitDate").value = todayISO();
+        document.getElementById("docUpdVisitDate").value = todayISO();
+        document.getElementById("scheduleDateFilter").value = todayISO();
 
-        const dateMatches = chosenDate
-          ? allRecords.filter((r) => r.nextDate === chosenDate)
-          : [];
-
-        if (!chosenDate) {
-          topModeBoxContent.innerHTML = `<div class="mode-subtitle">${headingText}</div>`;
-          return;
+        function normalizeEmail(email = "") {
+            return String(email || "").trim().toLowerCase().replace(/\s+/g, "");
         }
 
-        if (!dateMatches.length) {
-          topModeBoxContent.innerHTML = `
-            <div class="mode-subtitle">${headingText}</div>
-            <p class="empty-note">${escapeHtml(chosenDate)} ke liye kisi client ki Next Date set nahi hai.</p>
-          `;
-        } else {
-          topModeBoxContent.innerHTML =
-            `<div class="mode-subtitle">${headingText}</div>` +
-            dateMatches
-              .map((r) => formatRecordCard(r, { showNextBadge: true, isDue: true, sectionTag: "reminderDate" }))
-              .join("");
+        function normalizeMobile(mob = "") {
+            return String(mob || "").replace(/\D/g, "");
         }
-      } else {
-        if (!allRecords.length) {
-          topModeBoxContent.innerHTML = `
-            <div class="mode-subtitle recent-title">Abhi last mein jin clients ka kaam hua hai:</div>
-            <p class="empty-note">Abhi koi kaam save nahi hua hai.</p>
-          `;
-        } else {
-          topModeBoxContent.innerHTML =
-            `<div class="mode-subtitle recent-title">Abhi last mein jin clients ka kaam hua hai (naye kaam aate hi update hota rahega):</div>` +
-            allRecords
-              .slice(0, 25)
-              .map((r) => formatRecordCard(r, { showNextBadge: false, sectionTag: "lastWork" }))
-              .join("");
+
+        function getAlternatePhonesArray(patient) {
+            if (!patient || typeof patient !== "object") return [];
+            if (Array.isArray(patient.alternatePhones)) {
+                return patient.alternatePhones.map(x => String(x || "").trim()).filter(Boolean);
+            }
+            const rawStr = patient.alternatePhones || patient.alternateMobiles || patient.extraPhones || "";
+            return String(rawStr)
+                .split(/[,;\n|]+/)
+                .map(s => s.trim())
+                .filter(Boolean);
         }
-      }
-    }
 
-    function renderFutureNextDetailBox() {
-      const withNextDate = allRecords
-        .filter((r) => Boolean(r.nextDate))
-        .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
-
-      if (!withNextDate.length) {
-        futureNextDetailList.innerHTML = `<p class="empty-note">Abhi kisi client ko aage ki Next Date nahi di gayi hai.</p>`;
-      } else {
-        futureNextDetailList.innerHTML = withNextDate
-          .map((r) => formatRecordCard(r, { showNextBadge: true, isDue: true, sectionTag: "futureNext" }))
-          .join("");
-      }
-    }
-
-    function renderClientHistoryBox() {
-      const q = (historyFilterInput.value || "").trim().toLowerCase();
-      const qDigits = cleanMobile(q);
-
-      const filtered = !q
-        ? allRecords
-        : allRecords.filter((r) => {
-            const nameMatch = String(r.name || "").toLowerCase().includes(q);
-            const mobileMatch = qDigits && cleanMobile(r.mobile).includes(qDigits);
-            return nameMatch || mobileMatch;
-          });
-
-      if (!filtered.length) {
-        clientHistoryList.innerHTML = `<p class="empty-note">Is naam ya mobile number ki koi history nahi mili.</p>`;
-      } else {
-        clientHistoryList.innerHTML =
-          `<div class="mode-subtitle history-title">Kul ${filtered.length} history entries:</div>` +
-          filtered
-            .slice(0, 60)
-            .map((r) => formatRecordCard(r, { showNextBadge: true, sectionTag: "clientHist" }))
-            .join("");
-      }
-    }
-
-    function renderAllViews() {
-      renderTopModeBox();
-      renderFutureNextDetailBox();
-      renderClientHistoryBox();
-      renderMobileSearch();
-    }
-
-    function startRecordsListener() {
-      if (unsubscribeRecords) unsubscribeRecords();
-      unsubscribeRecords = onSnapshot(
-        collection(db, "records"),
-        (snapshot) => {
-          allRecords = snapshot.docs
-            .map((d) => ({ id: d.id, ...d.data() }))
-            .sort((a, b) => getRecordTimeMs(b) - getRecordTimeMs(a));
-          renderAllViews();
-        },
-        (err) => {
-          const msg = `<p class="empty-note">Firestore error: ${escapeHtml(err.message)}</p>`;
-          topModeBoxContent.innerHTML = msg;
-          futureNextDetailList.innerHTML = msg;
-          clientHistoryList.innerHTML = msg;
+        function getAllPatientPhones(patient) {
+            const mainMob = String(patient?.mobile || patient?.phone || "").trim();
+            const altList = getAlternatePhonesArray(patient);
+            const seen = new Set();
+            const combined = [];
+            [mainMob, ...altList].forEach(num => {
+                const digits = normalizeMobile(num);
+                if (digits && !seen.has(digits)) {
+                    seen.add(digits);
+                    combined.push(num.trim());
+                }
+            });
+            return combined;
         }
-      );
-    }
 
-    async function completeEmailLinkSignIn() {
-      if (!isSignInWithEmailLink(auth, window.location.href)) return;
-
-      let emailForSignIn = window.localStorage.getItem("shivEmailForSignIn");
-      if (!emailForSignIn) {
-        emailForSignIn = window.prompt("Kripya apna Gmail address confirm karein:");
-      }
-
-      if (!emailForSignIn) {
-        setBoxMessage(statusMsg, "Login poora karne ke liye Gmail address zaroori hai.", "error");
-        return;
-      }
-
-      try {
-        await signInWithEmailLink(auth, emailForSignIn, window.location.href);
-        window.localStorage.removeItem("shivEmailForSignIn");
-        window.history.replaceState({}, document.title, window.location.pathname);
-      } catch (err) {
-        setBoxMessage(statusMsg, "Email link login mein samasya aayi: " + err.message, "error");
-      }
-    }
-
-    completeEmailLinkSignIn();
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        clearBoxMessage(statusMsg);
-        loginWrap.style.display = "none";
-        dashboardWrap.style.display = "block";
-        loggedInUser.textContent = "Logged in as: " + user.email;
-        startRecordsListener();
-      } else {
-        if (unsubscribeRecords) {
-          unsubscribeRecords();
-          unsubscribeRecords = null;
+        function patientMatchesDigits(patient, searchDigits) {
+            if (!searchDigits) return false;
+            const allPhones = getAllPatientPhones(patient);
+            return allPhones.some(num => {
+                const d = normalizeMobile(num);
+                return d === searchDigits || d.includes(searchDigits);
+            });
         }
-        dashboardWrap.style.display = "none";
-        loginWrap.style.display = "flex";
-      }
-    });
 
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      clearBoxMessage(statusMsg);
-
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-
-      if (!email || !password) {
-        setBoxMessage(statusMsg, "Kripya Gmail aur Password dono darj karein.", "error");
-        return;
-      }
-
-      loginBtn.disabled = true;
-      loginBtn.textContent = "Logging in...";
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        if (
-          err.code === "auth/invalid-credential" ||
-          err.code === "auth/user-not-found" ||
-          err.code === "auth/wrong-password"
-        ) {
-          setBoxMessage(statusMsg, "Galat Gmail ya password hai. Kripya dobara check karein.", "error");
-        } else if (err.code === "auth/invalid-email") {
-          setBoxMessage(statusMsg, "Kripya sahi Gmail address likhein.", "error");
-        } else if (err.code === "auth/network-request-failed") {
-          setBoxMessage(statusMsg, "Internet connection check karein.", "error");
-        } else {
-          setBoxMessage(statusMsg, `Login error (${err.code || "unknown"}): ${err.message}`, "error");
+        function renderExtraPhoneRows(containerId, existingNumbers = []) {
+            const box = document.getElementById(containerId);
+            if (!box) return;
+            box.innerHTML = "";
+            existingNumbers.forEach(num => addExtraPhoneRow(containerId, num));
         }
-      } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = "Login";
-      }
-    });
 
-    emailLinkBtn.addEventListener("click", async () => {
-      clearBoxMessage(statusMsg);
-      const email = emailInput.value.trim();
+        window.addExtraPhoneRow = function(containerId, initialValue = "") {
+            const box = document.getElementById(containerId);
+            if (!box) return;
+            const idx = box.children.length + 1;
+            const row = document.createElement("div");
+            row.className = "extra-phone-row";
+            row.innerHTML = `
+                <input type="tel" class="extra-phone-input" value="${String(initialValue).replace(/"/g, "&quot;")}" placeholder="Extra Number #${idx} daalein...">
+                <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.remove()">✕</button>
+            `;
+            box.appendChild(row);
+        };
 
-      if (!email) {
-        setBoxMessage(statusMsg, "Pehle upar Gmail box mein apna email address likhein.", "error");
-        return;
-      }
+        function collectExtraPhones(containerId) {
+            const box = document.getElementById(containerId);
+            if (!box) return [];
+            const inputs = Array.from(box.querySelectorAll(".extra-phone-input"));
+            const seen = new Set();
+            const list = [];
+            inputs.forEach(inp => {
+                const val = String(inp.value || "").trim();
+                const digits = normalizeMobile(val);
+                if (digits && !seen.has(digits)) {
+                    seen.add(digits);
+                    list.push(val);
+                }
+            });
+            return list;
+        }
 
-      const actionCodeSettings = {
-        url: window.location.origin + window.location.pathname,
-        handleCodeInApp: true
-      };
+        function formatWhatsAppNumber(mob = "") {
+            const digits = normalizeMobile(mob);
+            if (!digits) return "";
+            return digits.length === 10 ? "91" + digits : digits;
+        }
 
-      emailLinkBtn.disabled = true;
-      emailLinkBtn.textContent = "Link bheja ja raha hai...";
+        function buildWhatsAppShareUrl(name = "", mobile = "", nextDate = "") {
+            const waPhone = formatWhatsAppNumber(mobile);
+            if (!waPhone) return "";
+            const lines = [
+                `Namaste ${name || "Patient"}, Family Health Care Centre mein aapka swagat hai.`
+            ];
+            if (nextDate) {
+                lines.push(`Aapki next appointment date: ${nextDate}.`);
+            }
+            if (WHATSAPP_GROUP_INVITE_LINK) {
+                lines.push(`Clinic WhatsApp Group join karne ke liye link: ${WHATSAPP_GROUP_INVITE_LINK}`);
+            }
+            return `https://wa.me/${waPhone}?text=${encodeURIComponent(lines.join("\n"))}`;
+        }
 
-      try {
-        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        window.localStorage.setItem("shivEmailForSignIn", email);
-        setBoxMessage(
-          statusMsg,
-          "Sign-in link " + email + " par bhej diya gaya hai. Gmail inbox (ya Spam) check karke link par tap karein.",
-          "info"
-        );
-      } catch (err) {
-        setBoxMessage(statusMsg, "Link bhejne mein samasya aayi: " + err.message, "error");
-      } finally {
-        emailLinkBtn.disabled = false;
-        emailLinkBtn.textContent = "Gmail Par Sign-In Link Bhejein";
-      }
-    });
+        function renderWhatsAppActionHtml(name = "", mobile = "", nextDate = "") {
+            const url = buildWhatsAppShareUrl(name, mobile, nextDate);
+            if (!url) return "";
+            return `<br><a href="${url}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-wa">WhatsApp Message / Group Invite Bhejein</a>`;
+        }
 
-    btnReminderMode.addEventListener("click", () => setTopView("reminder"));
-    btnRecentMode.addEventListener("click", () => setTopView("recent"));
-    reminderFilterDate.addEventListener("change", renderTopModeBox);
+        function hasValidPatientIdentity(p) {
+            if (!p || typeof p !== "object") return false;
+            const possibleName = p.name || p.patientName || p.fullName || "";
+            const phones = getAllPatientPhones(p);
+            return String(possibleName).trim() !== "" || phones.length > 0;
+        }
 
-    btnClientHistoryToggle.addEventListener("click", () => {
-      const isOpen = clientHistoryBox.classList.toggle("open");
-      btnClientHistoryToggle.classList.toggle("active-history", isOpen);
-      renderClientHistoryBox();
-      if (isOpen) {
-        clientHistoryBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
-    });
+        function resolveRoleFromEmail(email = "") {
+            const cleanEmail = normalizeEmail(email);
+            const doctorList = DOCTOR_EMAILS.map(normalizeEmail).filter(Boolean);
+            return doctorList.includes(cleanEmail) ? "doctor" : "reception";
+        }
 
-    closeClientHistoryBtn.addEventListener("click", () => {
-      clientHistoryBox.classList.remove("open");
-      btnClientHistoryToggle.classList.remove("active-history");
-    });
+        function showDashboardView(role, email) {
+            currentRole = resolveRoleFromEmail(email) === "doctor" ? "doctor" : (role === "doctor" ? "doctor" : "reception");
+            isLoggedInSession = true;
 
-    historyFilterInput.addEventListener("input", renderClientHistoryBox);
+            document.getElementById("loggedUserEmail").textContent =
+                `Logged in: ${email || "Unknown"} | Role: ${currentRole.toUpperCase()}`;
 
-    closeNextEntryBoxBtn.addEventListener("click", closeNextEntryBox);
+            if (currentRole === "doctor") {
+                document.getElementById("roleTitle").textContent = "Doctor Dashboard";
+                document.getElementById("roleBadge").textContent = "DOCTOR";
+                document.getElementById("doctorInstantSection").classList.remove("hidden");
+                document.getElementById("receptionSection").classList.add("hidden");
+            } else {
+                document.getElementById("roleTitle").textContent = "Reception Dashboard";
+                document.getElementById("roleBadge").textContent = "RECEPTION";
+                document.getElementById("receptionSection").classList.remove("hidden");
+                document.getElementById("doctorInstantSection").classList.add("hidden");
+            }
 
-    nextDateEntryForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      clearBoxMessage(nextVisitStatus);
-      if (!followupSourceRecord) return;
+            document.getElementById("loginSection").classList.add("hidden");
+            document.getElementById("dashboardSection").style.display = "block";
+        }
 
-      const newWorkDate = nextVisitWorkDate.value;
-      const newBill = Number(nextVisitBill.value || 0);
-      const newWorkItems = nextVisitWorkItems.value.trim();
-      const newFutureDate = nextVisitFutureDate.value;
+        function showLoginView() {
+            isLoggedInSession = false;
+            document.getElementById("dashboardSection").style.display = "none";
+            document.getElementById("loginSection").classList.remove("hidden");
+        }
 
-      saveNextVisitBtn.disabled = true;
-      saveNextVisitBtn.textContent = "Save ho raha hai...";
+        function saveClinicSession(sessionData) {
+            try {
+                localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessionData));
+            } catch (err) {
+                console.error("Session save error:", err);
+            }
+        }
 
-      try {
-        await updateDoc(doc(db, "records", followupSourceRecord.id), {
-          nextDate: "",
-          completedOn: newWorkDate,
-          updatedBy: auth.currentUser?.email || "",
-          updatedAtIso: new Date().toISOString()
+        function clearClinicSession() {
+            authToken = null;
+            currentUid = null;
+            currentEmail = null;
+            currentRole = "reception";
+            isLoggedInSession = false;
+            try {
+                localStorage.removeItem(SESSION_STORAGE_KEY);
+            } catch (err) {
+                console.error("Session clear error:", err);
+            }
+        }
+
+        async function refreshIdTokenIfNeeded(session) {
+            if (!session.refreshToken) return session.idToken;
+            const res = await fetch(
+                `https://securetoken.googleapis.com/v1/token?key=${FIREBASE_CONFIG.apiKey}`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        grant_type: "refresh_token",
+                        refresh_token: session.refreshToken
+                    })
+                }
+            );
+            if (!res.ok) throw new Error("Token refresh failed");
+            const data = await res.json();
+            const updatedSession = {
+                ...session,
+                idToken: data.id_token,
+                refreshToken: data.refresh_token || session.refreshToken,
+                uid: data.user_id || session.uid
+            };
+            saveClinicSession(updatedSession);
+            return updatedSession.idToken;
+        }
+
+        function toFirestoreFields(obj) {
+            const fields = {};
+            for (const [k, v] of Object.entries(obj)) {
+                if (v === null || v === undefined) continue;
+                if (typeof v === "number") {
+                    fields[k] = Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v };
+                } else {
+                    fields[k] = { stringValue: String(v) };
+                }
+            }
+            return fields;
+        }
+
+        function fromFirestoreDoc(doc) {
+            const out = { id: doc.name.split("/").pop() };
+            const fields = doc.fields || {};
+            for (const [k, val] of Object.entries(fields)) {
+                if ("stringValue" in val) out[k] = val.stringValue;
+                else if ("integerValue" in val) out[k] = Number(val.integerValue);
+                else if ("doubleValue" in val) out[k] = Number(val.doubleValue);
+            }
+            return out;
+        }
+
+        async function upsertDoc(collectionName, docId, dataObj) {
+            if (!authToken) return;
+            const url = `${FIRESTORE_BASE_URL}/${collectionName}/${docId}`;
+            const res = await fetch(url, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`
+                },
+                body: JSON.stringify({ fields: toFirestoreFields(dataObj) })
+            });
+            if (!res.ok) {
+                console.error(`Firestore write failed for ${collectionName}/${docId}:`, res.status);
+            }
+        }
+
+        async function deleteDoc(collectionName, docId) {
+            if (!authToken || !docId) return;
+            const url = `${FIRESTORE_BASE_URL}/${collectionName}/${docId}`;
+            const res = await fetch(url, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
+            });
+            if (!res.ok && res.status !== 404) {
+                console.error(`Firestore delete failed for ${collectionName}/${docId}:`, res.status);
+            }
+        }
+
+        async function listDocs(collectionName) {
+            if (!authToken) return [];
+            const url = `${FIRESTORE_BASE_URL}/${collectionName}?pageSize=500`;
+            const res = await fetch(url, {
+                headers: { Authorization: `Bearer ${authToken}` }
+            });
+            if (!res.ok) return [];
+            const data = await res.json();
+            return (data.documents || []).map(fromFirestoreDoc);
+        }
+
+        async function loadAllClinicData() {
+            if (!authToken) return;
+            const [pats, appts, visitsDocs] = await Promise.all([
+                listDocs("patients"),
+                listDocs("appointments"),
+                listDocs(VISITS_COLLECTION)
+            ]);
+            patientsCache = pats
+                .filter(hasValidPatientIdentity)
+                .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+            appointmentsCache = appts.sort((a, b) => (a.token || 0) - (b.token || 0));
+            visitsCache = visitsDocs.sort((a, b) => {
+                const idxDiff = (Number(b.visitIndex) || 0) - (Number(a.visitIndex) || 0);
+                if (idxDiff !== 0) return idxDiff;
+                return String(b.visitDate || b.createdAt || "").localeCompare(String(a.visitDate || a.createdAt || ""));
+            });
+            const maxToken = appointmentsCache.reduce((m, item) => Math.max(m, Number(item.token) || 0), 0);
+            nextTokenCounter = maxToken + 1;
+            renderAllViews();
+        }
+
+        async function restoreClinicSession() {
+            try {
+                const raw = localStorage.getItem(SESSION_STORAGE_KEY);
+                if (!raw) {
+                    showLoginView();
+                    return;
+                }
+                const saved = JSON.parse(raw);
+                if (!saved || !saved.email) {
+                    showLoginView();
+                    return;
+                }
+                currentEmail = saved.email;
+                currentUid = saved.uid || null;
+                authToken = saved.idToken || null;
+
+                if (saved.idToken && saved.refreshToken) {
+                    try {
+                        authToken = await refreshIdTokenIfNeeded(saved);
+                    } catch (_) {
+                        // Offline fallback
+                    }
+                }
+
+                currentRole = resolveRoleFromEmail(currentEmail);
+                saveClinicSession({
+                    idToken: authToken || saved.idToken,
+                    refreshToken: saved.refreshToken,
+                    uid: currentUid,
+                    email: currentEmail,
+                    role: currentRole
+                });
+
+                showDashboardView(currentRole, currentEmail);
+                await loadAllClinicData();
+            } catch (err) {
+                console.error("Restore session error:", err);
+                showLoginView();
+            }
+        }
+
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            errEl.textContent = "";
+            statusEl.textContent = "Logging in...";
+            loginBtn.disabled = true;
+
+            const typedEmail = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value;
+
+            try {
+                const res = await fetch(
+                    `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_CONFIG.apiKey}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email: typedEmail, password, returnSecureToken: true })
+                    }
+                );
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data?.error?.message || "Invalid email or password");
+                }
+
+                authToken = data.idToken;
+                currentUid = data.localId;
+                currentEmail = data.email || typedEmail;
+                currentRole = resolveRoleFromEmail(currentEmail);
+
+                saveClinicSession({
+                    idToken: data.idToken,
+                    refreshToken: data.refreshToken,
+                    uid: data.localId,
+                    email: currentEmail,
+                    role: currentRole
+                });
+
+                statusEl.textContent = "";
+                showDashboardView(currentRole, currentEmail);
+                await loadAllClinicData();
+            } catch (err) {
+                statusEl.textContent = "";
+                errEl.textContent = err.message || "Login failed";
+            } finally {
+                loginBtn.disabled = false;
+            }
         });
 
-        await addDoc(collection(db, "records"), {
-          name: followupSourceRecord.name || "",
-          mobile: followupSourceRecord.mobile || "",
-          address: followupSourceRecord.address || "",
-          roUv: followupSourceRecord.roUv || "UV",
-          totalBill: newBill,
-          workAndItems: newWorkItems,
-          workDate: newWorkDate,
-          nextDate: newFutureDate,
-          createdBy: auth.currentUser?.email || "",
-          createdAtIso: new Date().toISOString()
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            clearClinicSession();
+            showLoginView();
         });
 
-        closeNextEntryBox();
-        setBoxMessage(clientFormStatus, "Next date ki nayi entry safalta se save ho gayi!", "info");
-      } catch (err) {
-        setBoxMessage(nextVisitStatus, "Entry save karne mein samasya aayi: " + err.message, "error");
-      } finally {
-        saveNextVisitBtn.disabled = false;
-        saveNextVisitBtn.textContent = "Next Date Ki Entry Save Karein";
-      }
-    });
-
-    toggleAddClientBtn.addEventListener("click", () => {
-      addClientFormBox.classList.toggle("open");
-    });
-
-    cancelModeBtn.addEventListener("click", () => {
-      resetFormMode();
-      clearBoxMessage(clientFormStatus);
-    });
-
-    clientForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      clearBoxMessage(clientFormStatus);
-
-      const data = {
-        name: document.getElementById("clientName").value.trim(),
-        mobile: document.getElementById("clientMobile").value.trim(),
-        address: document.getElementById("clientAddress").value.trim(),
-        roUv: document.getElementById("roUvType").value,
-        totalBill: Number(document.getElementById("totalBill").value || 0),
-        workAndItems: document.getElementById("workAndItems").value.trim(),
-        workDate: document.getElementById("workDate").value,
-        nextDate: document.getElementById("nextDate").value
-      };
-
-      saveClientBtn.disabled = true;
-      saveClientBtn.textContent = editingRecordId ? "Update ho raha hai..." : "Save ho raha hai...";
-
-      try {
-        if (editingRecordId) {
-          await updateDoc(doc(db, "records", editingRecordId), {
-            ...data,
-            updatedBy: auth.currentUser?.email || "",
-            updatedAtIso: new Date().toISOString()
-          });
-          resetFormMode();
-          setBoxMessage(clientFormStatus, "Record safalta se update ho gaya!", "info");
-        } else {
-          await addDoc(collection(db, "records"), {
-            ...data,
-            createdBy: auth.currentUser?.email || "",
-            createdAtIso: new Date().toISOString()
-          });
-          resetFormMode();
-          setBoxMessage(clientFormStatus, "Client record safalta se save ho gaya!", "info");
+        function readSelectedFileData(fileInputEl) {
+            return new Promise((resolve) => {
+                const file = fileInputEl?.files?.[0];
+                if (!file) {
+                    resolve({ fileName: "", fileDataUrl: "", isImage: false });
+                    return;
+                }
+                const isImage = String(file.type || "").startsWith("image/");
+                if (isImage && file.size <= 500 * 1024) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        resolve({
+                            fileName: file.name,
+                            fileDataUrl: typeof reader.result === "string" ? reader.result : "",
+                            isImage: true
+                        });
+                    };
+                    reader.onerror = () => resolve({ fileName: file.name, fileDataUrl: "", isImage: false });
+                    reader.readAsDataURL(file);
+                } else {
+                    resolve({ fileName: file.name, fileDataUrl: "", isImage: false });
+                }
+            });
         }
-      } catch (err) {
-        setBoxMessage(clientFormStatus, "Save/Update karne mein samasya aayi: " + err.message, "error");
-      } finally {
-        saveClientBtn.disabled = false;
-        saveClientBtn.textContent = editingRecordId ? "Update Record" : "Client Record Save Karein";
-      }
-    });
 
-    mobileSearchInput.addEventListener("input", renderMobileSearch);
+        function getVisitsForPatient(patient) {
+            const pPhoneDigits = new Set(getAllPatientPhones(patient).map(normalizeMobile).filter(Boolean));
+            const matchingPatientIds = new Set(
+                patientsCache
+                    .filter(p => p.id === patient.id || getAllPatientPhones(p).some(n => pPhoneDigits.has(normalizeMobile(n))))
+                    .map(p => p.id)
+            );
 
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-    });
-  </script>
+            const rawMatched = visitsCache.filter(v => {
+                if (matchingPatientIds.has(v.patientId)) return true;
+                const vMob = normalizeMobile(v.mobile || v.phone);
+                return Boolean(vMob && pPhoneDigits.has(vMob));
+            });
+
+            const uniqueVisitsMap = new Map();
+            rawMatched.forEach((v, i) => {
+                const key = v.id || `${v.visitDate || ""}_${v.treatment || ""}_${v.billAmount ?? v.bill ?? ""}_${i}`;
+                uniqueVisitsMap.set(key, v);
+            });
+
+            const list = Array.from(uniqueVisitsMap.values());
+            if (list.length > 0) {
+                return list.sort((a, b) => {
+                    const idxDiff = (Number(b.visitIndex) || 0) - (Number(a.visitIndex) || 0);
+                    if (idxDiff !== 0) return idxDiff;
+                    const dA = String(a.visitDate || a.createdAt || "");
+                    const dB = String(b.visitDate || b.createdAt || "");
+                    return dB.localeCompare(dA);
+                });
+            }
+
+            const fallbackDate = patient.lastVisitDate || (patient.createdAt ? String(patient.createdAt).split("T")[0] : "-");
+            const fallbackTreatment = patient.lastTreatment || patient.problem || patient.symptoms || "-";
+            const fallbackGiven = patient.itemsGiven || patient.givenItems || patient.medicineGiven || "-";
+            const fallbackFileName = patient.fileName || "";
+            const fallbackFileDataUrl = patient.fileDataUrl || "";
+            const fallbackBill = patient.billAmount ?? patient.lastBill ?? patient.bill ?? "-";
+            const fallbackNext = patient.nextDate || "-";
+
+            if (
+                fallbackTreatment !== "-" ||
+                fallbackGiven !== "-" ||
+                fallbackFileName ||
+                fallbackBill !== "-" ||
+                fallbackNext !== "-" ||
+                fallbackDate !== "-"
+            ) {
+                return [{
+                    id: "fallback_" + patient.id,
+                    patientId: patient.id,
+                    isFallback: true,
+                    visitDate: fallbackDate,
+                    treatment: fallbackTreatment,
+                    itemsGiven: fallbackGiven,
+                    fileName: fallbackFileName,
+                    fileDataUrl: fallbackFileDataUrl,
+                    billAmount: fallbackBill,
+                    nextDate: fallbackNext
+                }];
+            }
+
+            return [];
+        }
+
+        window.deleteVisitEntry = async function(visitId, vDate = "") {
+            if (!visitId) return;
+            const ok = confirm(`Kya aap ${vDate || "is"} visit entry ko delete karna chahte hain?`);
+            if (!ok) return;
+
+            if (!String(visitId).startsWith("fallback_")) {
+                visitsCache = visitsCache.filter(v => v.id !== visitId);
+                await deleteDoc(VISITS_COLLECTION, visitId);
+            }
+
+            if (activeDoctorPatientId) {
+                const pat = patientsCache.find(p => p.id === activeDoctorPatientId);
+                if (pat) {
+                    const remainingVisits = getVisitsForPatient(pat);
+                    const latest = remainingVisits[0];
+                    if (latest) {
+                        pat.lastVisitDate = latest.visitDate || "";
+                        pat.lastTreatment = latest.treatment || "";
+                        pat.itemsGiven = latest.itemsGiven || latest.givenItems || "";
+                        pat.givenItems = pat.itemsGiven;
+                        pat.billAmount = latest.billAmount ?? latest.bill ?? 0;
+                        pat.lastBill = pat.billAmount;
+                        pat.nextDate = latest.nextDate || "";
+                    } else if (String(visitId).startsWith("fallback_")) {
+                        pat.lastVisitDate = "";
+                        pat.lastTreatment = "";
+                        pat.itemsGiven = "";
+                        pat.givenItems = "";
+                        pat.billAmount = 0;
+                        pat.lastBill = 0;
+                        pat.nextDate = "";
+                    }
+                    await upsertDoc("patients", pat.id, pat);
+                }
+            }
+
+            renderAllViews();
+            showDocBannerHtml("Galat visit entry delete ho gayi.");
+        };
+
+        window.deletePatientRecord = async function(patientId, patientName = "") {
+            if (!patientId) return;
+            const ok = confirm(`Kya aap "${patientName || "is patient"}" ka poora record delete karna chahte hain?`);
+            if (!ok) return;
+
+            const pat = patientsCache.find(p => p.id === patientId);
+            const pPhoneDigits = new Set((pat ? getAllPatientPhones(pat) : []).map(normalizeMobile).filter(Boolean));
+
+            const relatedVisits = visitsCache.filter(v => {
+                if (v.patientId === patientId) return true;
+                const vMob = normalizeMobile(v.mobile || v.phone);
+                return Boolean(vMob && pPhoneDigits.has(vMob));
+            });
+            for (const v of relatedVisits) {
+                if (v.id && !String(v.id).startsWith("fallback_")) {
+                    await deleteDoc(VISITS_COLLECTION, v.id);
+                }
+            }
+            visitsCache = visitsCache.filter(v => !relatedVisits.some(rv => rv.id === v.id));
+
+            const relatedAppts = appointmentsCache.filter(a => a.patientId === patientId);
+            for (const a of relatedAppts) {
+                if (a.id) {
+                    await deleteDoc("appointments", a.id);
+                }
+            }
+            appointmentsCache = appointmentsCache.filter(a => a.patientId !== patientId);
+
+            patientsCache = patientsCache.filter(p => p.id !== patientId);
+            await deleteDoc("patients", patientId);
+
+            if (editingPatientId === patientId) {
+                cancelEditSavedPatient();
+            }
+            if (activeDoctorPatientId === patientId) {
+                clearDoctorMobileLookup();
+            }
+
+            renderAllViews();
+            showDocBannerHtml(`"${patientName || "Patient"}" ka record delete ho gaya.`);
+        };
+
+        function renderDateWiseVisitBoxesHtml(patient, pVisits) {
+            if (!pVisits.length) {
+                return `<p class="muted">Is patient ki koi date-wise visit entry abhi darj nahi hai.</p>`;
+            }
+
+            return pVisits.map((v, idx) => {
+                const vDate = v.visitDate || "-";
+                const treatment = v.treatment || v.problem || patient.lastTreatment || patient.problem || "-";
+                const given = v.itemsGiven || v.givenItems || v.medicineGiven || v.itemsGiven || patient.itemsGiven || patient.givenItems || "-";
+                const fileName = v.fileName || "";
+                const fileDataUrl = v.fileDataUrl || "";
+                const bill = v.billAmount ?? v.bill ?? patient.billAmount ?? patient.lastBill ?? 0;
+                const nextDate = v.nextDate || patient.nextDate || "-";
+                const visitNum = Number(v.visitIndex) || (pVisits.length - idx);
+
+                let fileHtml = `<div class="visit-detail-row"><strong>Treatment File:</strong> -</div>`;
+                if (fileDataUrl && fileDataUrl.startsWith("data:image/")) {
+                    fileHtml = `
+                        <div class="visit-detail-row"><strong>Treatment File:</strong> ${fileName || "Uploaded Photo"}</div>
+                        <img src="${fileDataUrl}" alt="${fileName || "Treatment File"}" class="visit-file-preview">
+                    `;
+                } else if (fileName) {
+                    fileHtml = `<div class="visit-detail-row"><strong>Treatment File:</strong> 📎 ${fileName}</div>`;
+                }
+
+                return `
+                    <div class="date-visit-box">
+                        <div class="date-visit-header">
+                            <span class="date-visit-badge">📅 Visit Date: ${vDate} (Visit #${visitNum})</span>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteVisitEntry('${v.id}', '${vDate}')">Delete Visit</button>
+                        </div>
+                        <div class="visit-detail-row"><strong>Kya Ilaaj / Treatment Hua:</strong> ${treatment}</div>
+                        <div class="visit-detail-row"><strong>Kya Diya Tha:</strong> ${given}</div>
+                        ${fileHtml}
+                        <div class="visit-detail-row"><strong>Bill Kitna Bana Tha:</strong> ₹${bill}</div>
+                        <div class="visit-detail-row" style="margin-bottom:0;"><strong>Next Date:</strong> ${nextDate}</div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        window.focusNewVisitForm = function() {
+            const formEl = document.getElementById("docUpdateExistingForm");
+            if (!formEl) return;
+            document.getElementById("docUpdTreatment").value = "";
+            document.getElementById("docUpdGiven").value = "";
+            document.getElementById("docUpdFile").value = "";
+            document.getElementById("docUpdBill").value = "";
+            document.getElementById("docUpdVisitDate").value = todayISO();
+            formEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            document.getElementById("docUpdTreatment").focus();
+        };
+
+        window.toggleScheduleDatePicker = function() {
+            const inputEl = document.getElementById("scheduleDateFilter");
+            if (!inputEl) return;
+            if (!inputEl.value) {
+                inputEl.value = todayISO();
+            }
+            if (typeof inputEl.showPicker === "function") {
+                try {
+                    inputEl.showPicker();
+                } catch (_) {
+                    inputEl.focus();
+                }
+            } else {
+                inputEl.focus();
+            }
+            renderScheduledPatientsByDate();
+        };
+
+        window.setScheduleDateToToday = function() {
+            document.getElementById("scheduleDateFilter").value = todayISO();
+            renderScheduledPatientsByDate();
+        };
+
+        function getLatestNextDateForPatient(patient) {
+            const pVisits = getVisitsForPatient(patient);
+            const latestVisit = pVisits[0];
+            return String(latestVisit?.nextDate || patient.nextDate || "").trim();
+        }
+
+        function hasEntryCompletedOnDate(patient, targetDate) {
+            if (!targetDate) return false;
+            const pVisits = getVisitsForPatient(patient);
+            const hasVisitOnDate = pVisits.some(
+                v => String(v.visitDate || "").trim() === targetDate
+            );
+            const hasLastVisitOnDate = String(patient.lastVisitDate || "").trim() === targetDate;
+            return hasVisitOnDate || hasLastVisitOnDate;
+        }
+
+        function renderScheduledPatientsByDate() {
+            const listEl = document.getElementById("scheduledPatientsList");
+            const headingEl = document.getElementById("scheduledPatientsHeading");
+            const inputEl = document.getElementById("scheduleDateFilter");
+            if (!listEl || !inputEl) return;
+
+            const targetDate = inputEl.value || todayISO();
+            const isToday = targetDate === todayISO();
+            if (headingEl) {
+                headingEl.textContent = isToday
+                    ? `Aaj (${targetDate}) Aane Wale Patients (Reminder)`
+                    : `${targetDate} Ko Aane Wale Patients (Reminder)`;
+            }
+
+            const pendingPatients = patientsCache.filter(
+                p => getLatestNextDateForPatient(p) === targetDate && !hasEntryCompletedOnDate(p, targetDate)
+            );
+
+            if (!pendingPatients.length) {
+                listEl.innerHTML = `<p class="muted">${isToday ? "Aaj" : targetDate + " ko"} koi pending patient bacha nahi hai.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = pendingPatients.map(p => {
+                const displayName = p.name || p.patientName || p.fullName || "Patient";
+                const allPhonesText = getAllPatientPhones(p).join(", ") || "-";
+                const displayAge = p.age ? `${p.age} Saal` : "-";
+                const displayAddress = p.address || "-";
+                const pVisits = getVisitsForPatient(p);
+                const latest = pVisits[0];
+                const treatment = latest?.treatment || p.lastTreatment || p.problem || p.symptoms || "-";
+                const nextDate = getLatestNextDateForPatient(p) || "-";
+
+                return `
+                    <div class="upcoming-item">
+                        <div class="biodata-top">
+                            <div>
+                                <strong>${displayName}</strong> <span class="muted">(${allPhonesText})</span>
+                                | <strong>Age:</strong> ${displayAge}
+                            </div>
+                            <div class="action-btns">
+                                <button type="button" class="btn btn-sm btn-blue" onclick="selectPatientByIdForDoctor('${p.id}')">Entry / Update</button>
+                                <button type="button" class="btn btn-sm" style="background:#b45309;" onclick="openEditSavedPatient('${p.id}')">Edit</button>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="deletePatientRecord('${p.id}', '${displayName.replace(/'/g, "\\'")}')">Delete</button>
+                            </div>
+                        </div>
+                        <div class="muted">
+                            <strong>Address:</strong> ${displayAddress} | <strong>Next Date:</strong> ${nextDate}
+                        </div>
+                        <div style="font-size:0.86rem; margin-top:3px;"><strong>Treatment:</strong> ${treatment}</div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        window.openEditSavedPatient = function(patientId) {
+            const pat = patientsCache.find(p => p.id === patientId);
+            if (!pat) return;
+            editingPatientId = patientId;
+            const pVisits = getVisitsForPatient(pat);
+            const latest = pVisits[0];
+
+            document.getElementById("editPatName").value = pat.name || pat.patientName || pat.fullName || "";
+            document.getElementById("editPatMobile").value = pat.mobile || pat.phone || "";
+            renderExtraPhoneRows("editExtraPhonesContainer", getAlternatePhonesArray(pat));
+            document.getElementById("editPatAge").value = pat.age || "";
+            document.getElementById("editPatAddress").value = pat.address || "";
+            document.getElementById("editPatProblem").value = pat.problem || pat.lastTreatment || pat.symptoms || "";
+            document.getElementById("editPatGiven").value = latest?.itemsGiven || latest?.givenItems || pat.itemsGiven || pat.givenItems || "";
+            document.getElementById("editPatBill").value = latest?.billAmount ?? latest?.bill ?? pat.billAmount ?? pat.lastBill ?? "";
+            document.getElementById("editPatNextDate").value = getLatestNextDateForPatient(pat) || "";
+            document.getElementById("editSavedPatientCard").classList.remove("hidden");
+            document.getElementById("editSavedPatientCard").scrollIntoView({ behavior: "smooth", block: "nearest" });
+        };
+
+        window.cancelEditSavedPatient = function() {
+            editingPatientId = null;
+            document.getElementById("editSavedPatientForm").reset();
+            document.getElementById("editExtraPhonesContainer").innerHTML = "";
+            document.getElementById("editSavedPatientCard").classList.add("hidden");
+        };
+
+        document.getElementById("editSavedPatientForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!editingPatientId) return;
+            const idx = patientsCache.findIndex(p => p.id === editingPatientId);
+            if (idx === -1) return;
+
+            const pat = patientsCache[idx];
+            pat.name = document.getElementById("editPatName").value.trim();
+            pat.mobile = document.getElementById("editPatMobile").value.trim();
+            const extraList = collectExtraPhones("editExtraPhonesContainer").filter(
+                n => normalizeMobile(n) !== normalizeMobile(pat.mobile)
+            );
+            pat.alternatePhones = extraList.join(", ");
+            pat.allMobiles = [pat.mobile, ...extraList].filter(Boolean).join(", ");
+            const ageVal = document.getElementById("editPatAge").value;
+            pat.age = ageVal ? Number(ageVal) : "";
+            pat.address = document.getElementById("editPatAddress").value.trim();
+            pat.problem = document.getElementById("editPatProblem").value.trim();
+            const givenVal = document.getElementById("editPatGiven").value.trim();
+            pat.itemsGiven = givenVal;
+            pat.givenItems = givenVal;
+            const billVal = document.getElementById("editPatBill").value;
+            if (billVal !== "") {
+                pat.billAmount = Number(billVal);
+                pat.lastBill = Number(billVal);
+            }
+            pat.nextDate = document.getElementById("editPatNextDate").value;
+
+            await upsertDoc("patients", pat.id, pat);
+            const updatedName = pat.name;
+            cancelEditSavedPatient();
+            renderAllViews();
+            if (activeDoctorPatientId === pat.id) {
+                openExistingPatientPanel(pat);
+            }
+            showDocBannerHtml(`"${updatedName}" ki saved profile update ho gayi.`);
+        });
+
+        function showDocBannerHtml(html) {
+            const b = document.getElementById("docActionBanner");
+            if (!b) return;
+            b.style.display = "block";
+            b.innerHTML = html;
+        }
+
+        function openExistingPatientPanel(patient) {
+            activeDoctorPatientId = patient.id;
+            document.getElementById("doctorNewPatientCard").classList.add("hidden");
+            document.getElementById("doctorExistingUpdateCard").classList.remove("hidden");
+            document.getElementById("lookupCardTitle").textContent = "Purana Patient Mila — Date-Wise Har Visit Detail";
+
+            const displayName = patient.name || patient.patientName || patient.fullName || "Patient";
+            const allPhonesText = getAllPatientPhones(patient).join(", ") || "-";
+            const displayAge = patient.age ? `${patient.age} Saal` : "-";
+            const displayAddress = patient.address || "-";
+            const pVisits = getVisitsForPatient(patient);
+            const latestVisit = pVisits[0];
+
+            document.getElementById("doctorLookupBody").innerHTML = `
+                <div class="patient-summary">
+                    <div class="biodata-top">
+                        <div><strong>Naam:</strong> ${displayName} | <strong>Numbers:</strong> ${allPhonesText} | <strong>Age:</strong> ${displayAge}</div>
+                        <div class="action-btns">
+                            <button type="button" class="btn btn-sm" style="background:#b45309;" onclick="openEditSavedPatient('${patient.id}')">Edit Profile</button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="deletePatientRecord('${patient.id}', '${displayName.replace(/'/g, "\\'")}')">Delete Patient</button>
+                        </div>
+                    </div>
+                    <div><strong>Address:</strong> ${displayAddress}</div>
+                    <div><strong>Kul Visits:</strong> ${pVisits.length} | <strong>Latest Next Date:</strong> ${latestVisit?.nextDate || patient.nextDate || "-"}</div>
+                </div>
+                <div style="margin-bottom:8px; font-weight:700; color:#0f766e;">Har Visit Ki Date-Wise Detail:</div>
+                ${renderDateWiseVisitBoxesHtml(patient, pVisits)}
+            `;
+
+            document.getElementById("docExistingHistoryBox").innerHTML = renderDateWiseVisitBoxesHtml(patient, pVisits);
+
+            document.getElementById("docUpdAge").value = patient.age || "";
+            document.getElementById("docUpdAddress").value = patient.address || "";
+            document.getElementById("docUpdVisitDate").value = todayISO();
+            document.getElementById("docUpdGiven").value = "";
+            document.getElementById("docUpdFile").value = "";
+            if (latestVisit?.nextDate) {
+                document.getElementById("docUpdNextDate").value = latestVisit.nextDate;
+            }
+        }
+
+        function openNewPatientPanel(mobileDigits) {
+            activeDoctorPatientId = null;
+            document.getElementById("doctorExistingUpdateCard").classList.add("hidden");
+            document.getElementById("doctorNewPatientCard").classList.remove("hidden");
+            document.getElementById("lookupCardTitle").textContent = "Naya Patient (Record Nahi Mila)";
+            document.getElementById("doctorLookupBody").innerHTML = `
+                <p class="muted">Mobile number <strong>${mobileDigits || ""}</strong> ke liye koi purana record nahi mila. Neeche <strong>Add Patient</strong> form mein details aur extra numbers jor kar save karein.</p>
+            `;
+            if (mobileDigits) {
+                document.getElementById("docNewMobile").value = mobileDigits;
+            }
+            document.getElementById("docNewVisitDate").value = todayISO();
+        }
+
+        window.handleDoctorMobileLookup = function() {
+            const rawInput = document.getElementById("docTopMobileSearch").value;
+            const digits = normalizeMobile(rawInput);
+
+            if (!digits) {
+                activeDoctorPatientId = null;
+                document.getElementById("doctorNewPatientCard").classList.add("hidden");
+                document.getElementById("doctorExistingUpdateCard").classList.add("hidden");
+                document.getElementById("lookupCardTitle").textContent = "Mobile Search Result";
+                document.getElementById("doctorLookupBody").innerHTML = `
+                    <p class="muted">Upar patient ka koi bhi mobile number daalein—purana patient hoga toh har visit ki date-wise detail alag box mein aayegi, naya hoga toh Add Patient form khulega.</p>
+                `;
+                return;
+            }
+
+            const exactMatched = patientsCache.find(p =>
+                getAllPatientPhones(p).some(num => normalizeMobile(num) === digits)
+            );
+            const matched = exactMatched || patientsCache.find(p => patientMatchesDigits(p, digits));
+
+            if (matched) {
+                openExistingPatientPanel(matched);
+            } else {
+                openNewPatientPanel(digits);
+            }
+        };
+
+        window.clearDoctorMobileLookup = function() {
+            document.getElementById("docTopMobileSearch").value = "";
+            document.getElementById("docActionBanner").style.display = "none";
+            handleDoctorMobileLookup();
+        };
+
+        window.selectPatientByIdForDoctor = function(patientId) {
+            const pat = patientsCache.find(p => p.id === patientId);
+            if (!pat) return;
+            document.getElementById("docTopMobileSearch").value = pat.mobile || pat.phone || getAllPatientPhones(pat)[0] || "";
+            openExistingPatientPanel(pat);
+        };
+
+        document.getElementById("docNewPatientForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById("docNewName").value.trim();
+            const mobile = document.getElementById("docNewMobile").value.trim();
+            const extraList = collectExtraPhones("docNewExtraPhonesContainer").filter(
+                n => normalizeMobile(n) !== normalizeMobile(mobile)
+            );
+            const allMobilesStr = [mobile, ...extraList].filter(Boolean).join(", ");
+            const age = Number(document.getElementById("docNewAge").value || 0);
+            const address = document.getElementById("docNewAddress").value.trim();
+            const visitDate = document.getElementById("docNewVisitDate").value;
+            const treatment = document.getElementById("docNewTreatment").value.trim();
+            const givenItems = document.getElementById("docNewGiven").value.trim();
+            const fileMeta = await readSelectedFileData(document.getElementById("docNewFile"));
+            const bill = Number(document.getElementById("docNewBill").value || 0);
+            const nextDate = document.getElementById("docNewNextDate").value;
+            const nowISO = new Date().toISOString();
+
+            const patientDocId = "pat_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+            const patientData = {
+                name,
+                mobile,
+                alternatePhones: extraList.join(", "),
+                allMobiles: allMobilesStr,
+                age,
+                gender: "",
+                address,
+                problem: treatment,
+                itemsGiven: givenItems,
+                givenItems,
+                fileName: fileMeta.fileName,
+                fileDataUrl: fileMeta.fileDataUrl,
+                lastVisitDate: visitDate,
+                lastTreatment: treatment,
+                billAmount: bill,
+                lastBill: bill,
+                nextDate,
+                addedByRole: "doctor",
+                addedByEmail: currentEmail || "",
+                status: "saved_direct",
+                createdAt: nowISO
+            };
+
+            patientsCache.unshift({ id: patientDocId, ...patientData });
+            await upsertDoc("patients", patientDocId, patientData);
+
+            const visitId = "vis_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+            const visitData = {
+                patientId: patientDocId,
+                mobile,
+                allMobiles: allMobilesStr,
+                visitDate,
+                lastVisitDate: visitDate,
+                visitIndex: 1,
+                treatment,
+                itemsGiven: givenItems,
+                givenItems,
+                fileName: fileMeta.fileName,
+                fileDataUrl: fileMeta.fileDataUrl,
+                billAmount: bill,
+                bill,
+                nextDate,
+                createdAt: nowISO
+            };
+            visitsCache.unshift({ id: visitId, ...visitData });
+            await upsertDoc(VISITS_COLLECTION, visitId, visitData);
+
+            document.getElementById("docNewPatientForm").reset();
+            document.getElementById("docNewExtraPhonesContainer").innerHTML = "";
+            document.getElementById("docNewVisitDate").value = todayISO();
+
+            renderAllViews();
+            openExistingPatientPanel({ id: patientDocId, ...patientData });
+            showDocBannerHtml(
+                `Naya patient "${name}" save ho gaya (Numbers: ${allMobilesStr}, Bill: ₹${bill}, Next Date: ${nextDate}).` +
+                renderWhatsAppActionHtml(name, mobile, nextDate)
+            );
+        });
+
+        document.getElementById("docUpdateExistingForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const pat = patientsCache.find(p => p.id === activeDoctorPatientId);
+            if (!pat) return;
+
+            const existingVisits = getVisitsForPatient(pat);
+            const maxVisitIndex = existingVisits.reduce(
+                (m, item) => Math.max(m, Number(item.visitIndex) || 0),
+                existingVisits.length
+            );
+            const nextVisitIndex = maxVisitIndex + 1;
+
+            const updatedAge = document.getElementById("docUpdAge").value;
+            const updatedAddress = document.getElementById("docUpdAddress").value.trim();
+            const visitDate = document.getElementById("docUpdVisitDate").value;
+            const treatment = document.getElementById("docUpdTreatment").value.trim();
+            const givenItems = document.getElementById("docUpdGiven").value.trim();
+            const fileMeta = await readSelectedFileData(document.getElementById("docUpdFile"));
+            const bill = Number(document.getElementById("docUpdBill").value || 0);
+            const nextDate = document.getElementById("docUpdNextDate").value;
+            const nowISO = new Date().toISOString();
+
+            const visitId = "vis_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+            const visitData = {
+                patientId: pat.id,
+                mobile: pat.mobile || pat.phone || "",
+                allMobiles: getAllPatientPhones(pat).join(", "),
+                visitDate,
+                lastVisitDate: visitDate,
+                visitIndex: nextVisitIndex,
+                treatment,
+                itemsGiven: givenItems,
+                givenItems,
+                fileName: fileMeta.fileName,
+                fileDataUrl: fileMeta.fileDataUrl,
+                billAmount: bill,
+                bill,
+                nextDate,
+                createdAt: nowISO
+            };
+            visitsCache.unshift({ id: visitId, ...visitData });
+            await upsertDoc(VISITS_COLLECTION, visitId, visitData);
+
+            if (updatedAge) pat.age = Number(updatedAge);
+            if (updatedAddress) pat.address = updatedAddress;
+            pat.lastVisitDate = visitDate;
+            pat.lastTreatment = treatment;
+            if (givenItems) {
+                pat.itemsGiven = givenItems;
+                pat.givenItems = givenItems;
+            }
+            if (fileMeta.fileName) pat.fileName = fileMeta.fileName;
+            if (fileMeta.fileDataUrl) pat.fileDataUrl = fileMeta.fileDataUrl;
+            pat.billAmount = bill;
+            pat.lastBill = bill;
+            pat.nextDate = nextDate;
+            await upsertDoc("patients", pat.id, pat);
+
+            document.getElementById("docUpdateExistingForm").reset();
+            document.getElementById("docUpdVisitDate").value = todayISO();
+
+            renderAllViews();
+            openExistingPatientPanel(pat);
+            const patName = pat.name || pat.patientName || "Patient";
+            const patMob = pat.mobile || pat.phone || "";
+            showDocBannerHtml(
+                `"${patName}" ki Visit #${nextVisitIndex} (${visitDate}) alag box mein save ho gayi.` +
+                renderWhatsAppActionHtml(patName, patMob, nextDate)
+            );
+        });
+
+        window.switchMainTab = function(tab) {
+            const addTab = document.getElementById("addTabContent");
+            const histTab = document.getElementById("historyTabContent");
+            const btnAdd = document.getElementById("tabAddBtn");
+            const btnHist = document.getElementById("tabHistoryBtn");
+
+            if (tab === "history") {
+                addTab.classList.add("hidden");
+                histTab.classList.remove("hidden");
+                btnAdd.classList.remove("active");
+                btnHist.classList.add("active");
+            } else {
+                histTab.classList.add("hidden");
+                addTab.classList.remove("hidden");
+                btnHist.classList.remove("active");
+                btnAdd.classList.add("active");
+            }
+        };
+
+        document.getElementById("addPatientForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const mobileVal = document.getElementById("pMobile").value.trim();
+            const extraList = collectExtraPhones("recExtraPhonesContainer").filter(
+                n => normalizeMobile(n) !== normalizeMobile(mobileVal)
+            );
+            const allMobilesStr = [mobileVal, ...extraList].filter(Boolean).join(", ");
+
+            const patientData = {
+                name: document.getElementById("pName").value.trim(),
+                mobile: mobileVal,
+                alternatePhones: extraList.join(", "),
+                allMobiles: allMobilesStr,
+                age: Number(document.getElementById("pAge").value),
+                gender: document.getElementById("pGender").value,
+                address: document.getElementById("pAddress").value.trim(),
+                problem: document.getElementById("pProblem").value.trim(),
+                addedByRole: "reception",
+                addedByEmail: currentEmail || "",
+                status: "waiting",
+                createdAt: new Date().toISOString()
+            };
+
+            const patientDocId = "pat_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+            patientsCache.unshift({ id: patientDocId, ...patientData });
+            await upsertDoc("patients", patientDocId, patientData);
+
+            const tokenNumber = nextTokenCounter++;
+            const apptId = "appt_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+            const apptData = {
+                patientId: patientDocId,
+                name: patientData.name,
+                mobile: patientData.mobile,
+                problem: patientData.problem,
+                token: tokenNumber,
+                status: "waiting",
+                createdAt: new Date().toISOString()
+            };
+            appointmentsCache.push({ id: apptId, ...apptData });
+            await upsertDoc("appointments", apptId, apptData);
+
+            const tokenBox = document.getElementById("tokenResultBox");
+            tokenBox.style.display = "block";
+            tokenBox.innerHTML =
+                `Patient save hua! Token Number: #${tokenNumber}` +
+                renderWhatsAppActionHtml(patientData.name, patientData.mobile, "");
+
+            document.getElementById("addPatientForm").reset();
+            document.getElementById("recExtraPhonesContainer").innerHTML = "";
+            renderAllViews();
+        });
+
+        window.markPatientSeen = async function(apptId) {
+            const idx = appointmentsCache.findIndex(a => a.id === apptId);
+            if (idx === -1) return;
+            appointmentsCache[idx].status = "seen";
+            appointmentsCache[idx].seenAt = new Date().toISOString();
+            await upsertDoc("appointments", apptId, appointmentsCache[idx]);
+            renderAllViews();
+        };
+
+        window.searchPatientByMobile = function() {
+            const q = normalizeMobile(document.getElementById("searchMobileInput").value);
+            const resEl = document.getElementById("receptionHistoryResult");
+            if (!q) {
+                resEl.innerHTML = `<p class="muted">Mobile number daalein.</p>`;
+                return;
+            }
+            const found = patientsCache.find(p => patientMatchesDigits(p, q));
+            if (!found) {
+                resEl.innerHTML = `<p class="muted">Is mobile number ke liye koi patient record nahi mila.</p>`;
+                return;
+            }
+            const pVisits = getVisitsForPatient(found);
+            resEl.innerHTML = `
+                <div class="patient-summary">
+                    <div><strong>Naam:</strong> ${found.name || found.patientName || "Patient"} | <strong>Numbers:</strong> ${getAllPatientPhones(found).join(", ") || "-"} | <strong>Age:</strong> ${found.age ? found.age + " Saal" : "-"}</div>
+                    <div><strong>Address:</strong> ${found.address || "-"}</div>
+                    <div><strong>Next Date:</strong> ${found.nextDate || "-"}</div>
+                </div>
+                ${renderDateWiseVisitBoxesHtml(found, pVisits)}
+            `;
+        };
+
+        window.toggleBiodataListVisibility = function() {
+            isBiodataListOpen = !isBiodataListOpen;
+            const bodyEl = document.getElementById("biodataCollapsibleBody");
+            const btnEl = document.getElementById("toggleBiodataListBtn");
+            if (bodyEl) {
+                bodyEl.classList.toggle("hidden", !isBiodataListOpen);
+            }
+            if (btnEl) {
+                btnEl.textContent = isBiodataListOpen ? "✕ Biodata List Chhupayein" : "📋 Biodata List Kholein";
+            }
+            if (isBiodataListOpen) {
+                renderLastPatientsBiodata();
+            }
+        };
+
+        window.loadMorePatientsBatch = function() {
+            visiblePatientsLimit += PATIENTS_PAGE_SIZE;
+            renderLastPatientsBiodata();
+        };
+
+        function renderLastPatientsBiodata() {
+            const box = document.getElementById("lastPatientsBiodataList");
+            const shownEl = document.getElementById("shownPatientsCount");
+            const totalEl = document.getElementById("totalPatientsCount");
+            const loadMoreWrap = document.getElementById("loadMorePatientsWrap");
+            const loadMoreBtn = document.getElementById("loadMorePatientsBtn");
+            if (!box) return;
+
+            const validPatients = patientsCache.filter(hasValidPatientIdentity);
+            if (totalEl) totalEl.textContent = validPatients.length;
+
+            if (!validPatients.length) {
+                if (shownEl) shownEl.textContent = "0";
+                if (loadMoreWrap) loadMoreWrap.classList.add("hidden");
+                box.innerHTML = `<p class="muted">Abhi koi patient record nahi hai.</p>`;
+                return;
+            }
+
+            const batch = validPatients.slice(0, visiblePatientsLimit);
+            if (shownEl) shownEl.textContent = batch.length;
+
+            box.innerHTML = batch.map(p => {
+                const displayName = p.name || p.patientName || p.fullName || "Patient";
+                const allPhonesText = getAllPatientPhones(p).join(", ") || "-";
+                const displayAge = p.age ? `${p.age} Saal` : "-";
+                const displayAddress = p.address || "-";
+                const pVisits = getVisitsForPatient(p);
+                const latest = pVisits[0];
+                const lastVisit = latest?.visitDate || p.lastVisitDate || "-";
+                const treatment = latest?.treatment || p.lastTreatment || p.problem || p.symptoms || "-";
+                const given = latest?.itemsGiven || latest?.givenItems || p.itemsGiven || p.givenItems || "-";
+                const fileName = latest?.fileName || p.fileName || "-";
+                const bill = latest?.billAmount ?? latest?.bill ?? p.billAmount ?? p.lastBill ?? "-";
+                const nextDate = getLatestNextDateForPatient(p) || "-";
+
+                return `
+                    <div class="biodata-item">
+                        <div class="biodata-top">
+                            <div><strong>${displayName}</strong> <span class="muted">(${allPhonesText}) | Age: ${displayAge}</span></div>
+                            <div class="action-btns">
+                                <button type="button" class="btn btn-sm btn-blue" onclick="selectPatientByIdForDoctor('${p.id}')">Open / Update</button>
+                                <button type="button" class="btn btn-sm" style="background:#b45309;" onclick="openEditSavedPatient('${p.id}')">Edit</button>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="deletePatientRecord('${p.id}', '${displayName.replace(/'/g, "\\'")}')">Delete</button>
+                            </div>
+                        </div>
+                        <div class="muted">Address: <strong>${displayAddress}</strong></div>
+                        <div class="muted">
+                            Visit: <strong>${lastVisit}</strong> | Bill: <strong>₹${bill}</strong> | Next Date: <strong>${nextDate}</strong>
+                        </div>
+                        <div style="font-size:0.86rem; margin-top:3px;"><strong>Treatment:</strong> ${treatment}</div>
+                        <div style="font-size:0.86rem; margin-top:2px;"><strong>Diya Tha:</strong> ${given}</div>
+                        <div style="font-size:0.86rem; margin-top:2px;"><strong>File:</strong> ${fileName}</div>
+                    </div>
+                `;
+            }).join("");
+
+            const remaining = validPatients.length - batch.length;
+            if (loadMoreWrap && loadMoreBtn) {
+                if (remaining > 0) {
+                    const nextBatchCount = Math.min(PATIENTS_PAGE_SIZE, remaining);
+                    loadMoreBtn.textContent = `Aur ${nextBatchCount} Patients Dekhein (${remaining} bache hain)`;
+                    loadMoreWrap.classList.remove("hidden");
+                } else {
+                    loadMoreWrap.classList.add("hidden");
+                }
+            }
+        }
+
+        function renderAllViews() {
+            const waitingItems = appointmentsCache.filter(a => a.status === "waiting");
+            document.getElementById("waitingCountDoc").textContent = waitingItems.length;
+            document.getElementById("waitingCountRec").textContent = waitingItems.length;
+
+            const docWaitEl = document.getElementById("doctorWaitingList");
+            const recWaitEl = document.getElementById("receptionWaitingList");
+
+            if (!waitingItems.length) {
+                docWaitEl.innerHTML = `<p class="muted">Abhi waiting mein koi patient nahi hai.</p>`;
+                recWaitEl.innerHTML = `<p class="muted">Abhi waiting list khaali hai.</p>`;
+            } else {
+                docWaitEl.innerHTML = waitingItems.map(item => `
+                    <div class="queue-item" style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <div>
+                            <span class="token-pill">#${item.token}</span>
+                            <strong>${item.name || "Patient"}</strong> (${item.mobile || "-"})<br>
+                            <span class="muted">${item.problem || "-"}</span>
+                        </div>
+                        <button class="btn btn-sm btn-success" onclick="markPatientSeen('${item.id}')">Mark Seen</button>
+                    </div>
+                `).join("");
+
+                recWaitEl.innerHTML = waitingItems.map(item => `
+                    <div class="queue-item">
+                        <span class="token-pill">#${item.token}</span>
+                        <strong>${item.name || "Patient"}</strong> (${item.mobile || "-"}) — <span class="muted">${item.problem || "-"}</span>
+                    </div>
+                `).join("");
+            }
+
+            renderScheduledPatientsByDate();
+            renderLastPatientsBiodata();
+            if (activeDoctorPatientId) {
+                const activePat = patientsCache.find(p => p.id === activeDoctorPatientId);
+                if (activePat) openExistingPatientPanel(activePat);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", restoreClinicSession);
+    </script>
 </body>
 </html>
