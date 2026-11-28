@@ -95,6 +95,57 @@
       border-color: #38bdf8;
     }
 
+    .phone-list-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .phone-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .phone-row input {
+      flex: 1;
+    }
+
+    .btn-remove-phone {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(248, 113, 113, 0.55);
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .btn-remove-phone:hover {
+      background: rgba(239, 68, 68, 0.28);
+    }
+
+    .btn-add-more-phone {
+      margin-top: 8px;
+      padding: 8px 13px;
+      border-radius: 9px;
+      border: 1px dashed #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      color: #7dd3fc;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-add-more-phone:hover {
+      background: rgba(56, 189, 248, 0.2);
+    }
+
     .btn-primary {
       width: 100%;
       padding: 12px 16px;
@@ -321,7 +372,6 @@
       color: #d8b4fe;
     }
 
-    /* Alag Box: Next Date Aane Par Entry Box */
     .next-entry-box {
       display: none;
       background: rgba(34, 197, 94, 0.08);
@@ -352,7 +402,6 @@
       color: #e2e8f0;
     }
 
-    /* Alag Box: Aage Ki Next Date Dene Par Client Detail Box */
     .future-next-box {
       background: rgba(245, 158, 11, 0.07);
       border: 1px solid rgba(245, 158, 11, 0.45);
@@ -367,7 +416,6 @@
       color: #fcd34d;
     }
 
-    /* Client History Alag Box */
     .client-history-box {
       display: none;
       background: rgba(168, 85, 247, 0.08);
@@ -730,7 +778,7 @@
         <input
           type="tel"
           id="mobileSearchInput"
-          placeholder="Mobile number daalein (purani detail ya naya client)..."
+          placeholder="Koi bhi mobile number daalein (main ya alternate number)..."
         />
       </div>
       <div class="search-result-box" id="mobileSearchResult"></div>
@@ -770,7 +818,7 @@
         <input
           type="text"
           id="historyFilterInput"
-          placeholder="Client naam ya mobile number se history chhaantein (ya sab dekhein)..."
+          placeholder="Client naam ya kisi bhi mobile number se history chhaantein..."
         />
       </div>
       <div id="clientHistoryList">
@@ -839,15 +887,17 @@
         <div class="mode-banner" id="modeBanner"></div>
 
         <form id="clientForm">
-          <div class="row-2">
-            <div class="form-group">
-              <label for="clientName">Naam</label>
-              <input type="text" id="clientName" placeholder="Client ka naam" required />
-            </div>
-            <div class="form-group">
-              <label for="clientMobile">Mobile Number</label>
-              <input type="tel" id="clientMobile" placeholder="10-ank mobile number" required />
-            </div>
+          <div class="form-group">
+            <label for="clientName">Naam</label>
+            <input type="text" id="clientName" placeholder="Client ka naam" required />
+          </div>
+
+          <div class="form-group">
+            <label>Mobile Numbers (Main + Alternate Numbers)</label>
+            <div class="phone-list-wrap" id="phoneFieldsContainer"></div>
+            <button type="button" class="btn-add-more-phone" id="addMorePhoneBtn">
+              + Add More Number
+            </button>
           </div>
 
           <div class="form-group">
@@ -978,6 +1028,9 @@
     const mobileSearchInput = document.getElementById("mobileSearchInput");
     const mobileSearchResult = document.getElementById("mobileSearchResult");
 
+    const phoneFieldsContainer = document.getElementById("phoneFieldsContainer");
+    const addMorePhoneBtn = document.getElementById("addMorePhoneBtn");
+
     const toggleAddClientBtn = document.getElementById("toggleAddClientBtn");
     const addClientFormBox = document.getElementById("addClientFormBox");
     const formHeading = document.getElementById("formHeading");
@@ -992,7 +1045,7 @@
     let editingRecordId = null;
     let followupSourceRecord = null;
     let activeInlineDateKey = null;
-    let activeTopView = "reminder"; // "reminder" | "recent"
+    let activeTopView = "reminder";
 
     function getTodayDateString() {
       const now = new Date();
@@ -1030,6 +1083,98 @@
       return String(val ?? "").replace(/\D/g, "");
     }
 
+    function getRecordPhones(r) {
+      const list = [];
+      if (Array.isArray(r.phones)) {
+        for (const p of r.phones) {
+          const t = String(p ?? "").trim();
+          if (t && !list.includes(t)) list.push(t);
+        }
+      }
+      const single = String(r.mobile ?? "").trim();
+      if (single && !list.includes(single)) {
+        list.unshift(single);
+      }
+      return list;
+    }
+
+    function recordMatchesDigits(r, digits) {
+      if (!digits) return false;
+      const phones = getRecordPhones(r);
+      return phones.some((p) => cleanMobile(p).includes(digits));
+    }
+
+    function refreshPhoneRowLabels() {
+      const rows = phoneFieldsContainer.querySelectorAll(".phone-row");
+      rows.forEach((row, idx) => {
+        const input = row.querySelector("input");
+        const removeBtn = row.querySelector(".btn-remove-phone");
+        input.placeholder = idx === 0 ? "Main mobile number" : `Alternate mobile number ${idx}`;
+        input.required = idx === 0;
+        if (removeBtn) {
+          removeBtn.style.display = rows.length > 1 ? "inline-block" : "none";
+        }
+      });
+    }
+
+    function addPhoneInputRow(initialVal = "", focusNew = false) {
+      const row = document.createElement("div");
+      row.className = "phone-row";
+
+      const input = document.createElement("input");
+      input.type = "tel";
+      input.className = "client-phone-input";
+      input.value = initialVal;
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "btn-remove-phone";
+      removeBtn.textContent = "×";
+      removeBtn.title = "Is number ko hatayein";
+      removeBtn.addEventListener("click", () => {
+        if (phoneFieldsContainer.querySelectorAll(".phone-row").length > 1) {
+          row.remove();
+          refreshPhoneRowLabels();
+        }
+      });
+
+      row.appendChild(input);
+      row.appendChild(removeBtn);
+      phoneFieldsContainer.appendChild(row);
+      refreshPhoneRowLabels();
+
+      if (focusNew) {
+        input.focus();
+      }
+    }
+
+    function setPhoneInputs(phoneArray) {
+      phoneFieldsContainer.innerHTML = "";
+      const values = Array.isArray(phoneArray) && phoneArray.length > 0 ? phoneArray : [""];
+      values.forEach((val, i) => addPhoneInputRow(val, false));
+      if (values.length === 1 && values[0] === "") {
+        phoneFieldsContainer.querySelector("input").required = true;
+      }
+    }
+
+    function getCollectedPhones() {
+      const inputs = Array.from(phoneFieldsContainer.querySelectorAll(".client-phone-input"));
+      const cleaned = [];
+      for (const inp of inputs) {
+        const val = inp.value.trim();
+        if (val && !cleaned.includes(val)) {
+          cleaned.push(val);
+        }
+      }
+      return cleaned;
+    }
+
+    setPhoneInputs([""]);
+
+    addMorePhoneBtn.addEventListener("click", () => {
+      addPhoneInputRow("", true);
+    });
+
     function getRecordTimeMs(r) {
       if (r.createdAtIso) {
         const t = Date.parse(r.createdAtIso);
@@ -1053,6 +1198,7 @@
       saveClientBtn.textContent = "Client Record Save Karein";
       cancelModeBtn.style.display = "none";
       clientForm.reset();
+      setPhoneInputs([""]);
       document.getElementById("workDate").value = getTodayDateString();
     }
 
@@ -1116,7 +1262,7 @@
       clearBoxMessage(clientFormStatus);
 
       document.getElementById("clientName").value = target.name || "";
-      document.getElementById("clientMobile").value = target.mobile || "";
+      setPhoneInputs(getRecordPhones(target));
       document.getElementById("clientAddress").value = target.address || "";
       document.getElementById("roUvType").value = target.roUv || "UV";
       document.getElementById("totalBill").value = target.totalBill ?? 0;
@@ -1138,9 +1284,11 @@
       nextVisitWorkItems.value = "";
       nextVisitFutureDate.value = "";
 
+      const phonesText = getRecordPhones(target).join(", ") || "-";
+
       prevClientSummaryBox.innerHTML = `
         <div style="font-weight:700; color:#86efac; margin-bottom:4px;">
-          Client: ${escapeHtml(target.name || "-")} (${escapeHtml(target.mobile || "-")})
+          Client: ${escapeHtml(target.name || "-")} (${escapeHtml(phonesText)})
         </div>
         <div><strong>Type:</strong> ${escapeHtml(target.roUv || "UV")} • <strong>Address:</strong> ${escapeHtml(target.address || "-")}</div>
         <div><strong>Pichhli Kaam Date:</strong> ${escapeHtml(target.workDate || "-")} • <strong>Pichhla Bill:</strong> ₹${escapeHtml(target.totalBill || 0)} • <strong>Set Next Date:</strong> ${escapeHtml(target.nextDate || "-")}</div>
@@ -1154,7 +1302,8 @@
 
     window.deleteRecordPermanently = async function (recordId) {
       const target = allRecords.find((item) => item.id === recordId);
-      const label = target ? `${target.name || "Client"} (${target.mobile || ""})` : "ye record";
+      const phonesText = target ? getRecordPhones(target).join(", ") : "";
+      const label = target ? `${target.name || "Client"} (${phonesText})` : "ye record";
       const ok = window.confirm(
         `Kya aap waqai "${label}" ka record hamesha (permanently) delete karna chahte hain? Ye wapas nahi aayega.`
       );
@@ -1182,6 +1331,9 @@
       const dateInputId = `inlineNextDate_${safeSection}_${safeId}`;
       const currentToday = getTodayDateString();
 
+      const phones = getRecordPhones(r);
+      const phonesDisplay = phones.length > 0 ? phones.join(" / ") : "-";
+
       let badgeHtml = `<span class="badge">₹${escapeHtml(r.totalBill || 0)}</span>`;
       if (isDue && r.nextDate) {
         badgeHtml = `<span class="badge badge-next">Date: ${escapeHtml(r.nextDate)}</span>`;
@@ -1192,7 +1344,7 @@
       return `
         <div class="record-card ${isDue ? "due-today" : ""}">
           <div class="record-top">
-            <span>${escapeHtml(r.name)} (${escapeHtml(r.mobile)})</span>
+            <span>${escapeHtml(r.name)} (${escapeHtml(phonesDisplay)})</span>
             <div class="record-actions">
               ${badgeHtml}
               <button type="button" class="btn-date-change" onclick="window.toggleInlineDateEditor('${safeId}', '${safeSection}')">
@@ -1213,6 +1365,7 @@
             <strong>${escapeHtml(r.roUv || "UV")}</strong> • Bill: ₹${escapeHtml(r.totalBill || 0)} • Kaam Date: ${escapeHtml(r.workDate || "-")}
             ${r.nextDate ? ` • Next Date: ${escapeHtml(r.nextDate)}` : ""}
           </div>
+          ${phones.length > 1 ? `<div class="record-meta">Sabhi Numbers: ${escapeHtml(phones.join(", "))}</div>` : ""}
           ${r.address ? `<div class="record-meta">Address: ${escapeHtml(r.address)}</div>` : ""}
           <div class="record-detail">Kaam / Samaan: ${escapeHtml(r.workAndItems || "-")}</div>
 
@@ -1231,13 +1384,14 @@
     }
 
     function renderMobileSearch() {
-      const digits = cleanMobile(mobileSearchInput.value);
+      const rawVal = mobileSearchInput.value.trim();
+      const digits = cleanMobile(rawVal);
       if (!digits) {
         mobileSearchResult.innerHTML = "";
         return;
       }
 
-      const matches = allRecords.filter((r) => cleanMobile(r.mobile).includes(digits));
+      const matches = allRecords.filter((r) => recordMatchesDigits(r, digits));
 
       if (matches.length > 0) {
         mobileSearchResult.innerHTML =
@@ -1248,7 +1402,7 @@
         mobileSearchResult.innerHTML = `
           <div class="new-client-prompt">
             <div class="new-client-text">
-              Naya mobile number (${escapeHtml(mobileSearchInput.value.trim())}) — purana record nahi mila.
+              Naya mobile number (${escapeHtml(rawVal)}) — purana record nahi mila.
             </div>
             <button type="button" class="btn-add-client" id="promptAddClientBtn">
               Add Client
@@ -1261,7 +1415,7 @@
           promptBtn.addEventListener("click", () => {
             resetFormMode();
             addClientFormBox.classList.add("open");
-            document.getElementById("clientMobile").value = mobileSearchInput.value.trim();
+            setPhoneInputs([rawVal]);
             document.getElementById("clientName").focus();
             clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
           });
@@ -1336,7 +1490,7 @@
         ? allRecords
         : allRecords.filter((r) => {
             const nameMatch = String(r.name || "").toLowerCase().includes(q);
-            const mobileMatch = qDigits && cleanMobile(r.mobile).includes(qDigits);
+            const mobileMatch = qDigits && recordMatchesDigits(r, qDigits);
             return nameMatch || mobileMatch;
           });
 
@@ -1521,6 +1675,7 @@
       const newBill = Number(nextVisitBill.value || 0);
       const newWorkItems = nextVisitWorkItems.value.trim();
       const newFutureDate = nextVisitFutureDate.value;
+      const sourcePhones = getRecordPhones(followupSourceRecord);
 
       saveNextVisitBtn.disabled = true;
       saveNextVisitBtn.textContent = "Save ho raha hai...";
@@ -1535,7 +1690,8 @@
 
         await addDoc(collection(db, "records"), {
           name: followupSourceRecord.name || "",
-          mobile: followupSourceRecord.mobile || "",
+          mobile: sourcePhones[0] || followupSourceRecord.mobile || "",
+          phones: sourcePhones,
           address: followupSourceRecord.address || "",
           roUv: followupSourceRecord.roUv || "UV",
           totalBill: newBill,
@@ -1569,9 +1725,16 @@
       e.preventDefault();
       clearBoxMessage(clientFormStatus);
 
+      const phones = getCollectedPhones();
+      if (phones.length === 0) {
+        setBoxMessage(clientFormStatus, "Kam se kam ek mobile number zaroor darj karein.", "error");
+        return;
+      }
+
       const data = {
         name: document.getElementById("clientName").value.trim(),
-        mobile: document.getElementById("clientMobile").value.trim(),
+        mobile: phones[0],
+        phones: phones,
         address: document.getElementById("clientAddress").value.trim(),
         roUv: document.getElementById("roUvType").value,
         totalBill: Number(document.getElementById("totalBill").value || 0),
