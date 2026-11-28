@@ -329,6 +329,12 @@
       color: #e9d5ff;
     }
 
+    .top-mode-btn.active-future {
+      background: rgba(251, 191, 36, 0.18);
+      border-color: #fbbf24;
+      color: #fef08a;
+    }
+
     .reminder-date-picker-row {
       display: none;
       align-items: center;
@@ -403,11 +409,16 @@
     }
 
     .future-next-box {
+      display: none;
       background: rgba(245, 158, 11, 0.07);
       border: 1px solid rgba(245, 158, 11, 0.45);
       border-radius: 16px;
       padding: 18px;
       margin-bottom: 16px;
+    }
+
+    .future-next-box.open {
+      display: block;
     }
 
     .future-next-box h2 {
@@ -690,6 +701,12 @@
       font-weight: 600;
     }
 
+    .mode-banner.followup {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.45);
+      color: #bbf7d0;
+    }
+
     .record-meta {
       color: #94a3b8;
       font-size: 12.5px;
@@ -796,6 +813,9 @@
         <button type="button" class="top-mode-btn" id="btnClientHistoryToggle">
           📜 Client History
         </button>
+        <button type="button" class="top-mode-btn active-future" id="btnFutureNextToggle">
+          📌 Aage Ki Next Date
+        </button>
       </div>
 
       <div class="reminder-date-picker-row open" id="reminderDateRow">
@@ -869,8 +889,11 @@
     </div>
 
     <!-- Alag Box: Jin Clients Ko Aage Ki Next Date Di Gayi Hai Unki Poori Detail -->
-    <div class="future-next-box" id="futureNextDetailBox">
-      <h2>📌 Aage Ki Next Date Detail Box (Jin Clients Ko Aage Ki Date Di Gayi Hai)</h2>
+    <div class="future-next-box open" id="futureNextDetailBox">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;">
+        <h2 style="margin-bottom:0;">📌 Aage Ki Next Date Detail Box (Jin Clients Ko Aage Ki Date Di Gayi Hai)</h2>
+        <button type="button" class="btn-cancel-inline" id="closeFutureNextBoxBtn">Band Karein</button>
+      </div>
       <div id="futureNextDetailList">
         <p class="empty-note">Records load ho rahe hain...</p>
       </div>
@@ -1003,6 +1026,7 @@
     const btnReminderMode = document.getElementById("btnReminderMode");
     const btnRecentMode = document.getElementById("btnRecentMode");
     const btnClientHistoryToggle = document.getElementById("btnClientHistoryToggle");
+    const btnFutureNextToggle = document.getElementById("btnFutureNextToggle");
     const reminderDateRow = document.getElementById("reminderDateRow");
     const reminderFilterDate = document.getElementById("reminderFilterDate");
     const topModeBoxContent = document.getElementById("topModeBoxContent");
@@ -1023,6 +1047,8 @@
     const saveNextVisitBtn = document.getElementById("saveNextVisitBtn");
     const nextVisitStatus = document.getElementById("nextVisitStatus");
 
+    const futureNextDetailBox = document.getElementById("futureNextDetailBox");
+    const closeFutureNextBoxBtn = document.getElementById("closeFutureNextBoxBtn");
     const futureNextDetailList = document.getElementById("futureNextDetailList");
 
     const mobileSearchInput = document.getElementById("mobileSearchInput");
@@ -1208,6 +1234,14 @@
       nextDateEntryForm.reset();
       nextVisitWorkDate.value = getTodayDateString();
       clearBoxMessage(nextVisitStatus);
+    }
+
+    function setFutureNextBoxOpen(isOpen) {
+      futureNextDetailBox.classList.toggle("open", isOpen);
+      btnFutureNextToggle.classList.toggle("active-future", isOpen);
+      if (isOpen) {
+        renderFutureNextDetailBox();
+      }
     }
 
     function setTopView(viewName) {
@@ -1646,6 +1680,19 @@
 
     btnReminderMode.addEventListener("click", () => setTopView("reminder"));
     btnRecentMode.addEventListener("click", () => setTopView("recent"));
+
+    btnFutureNextToggle.addEventListener("click", () => {
+      const nextState = !futureNextDetailBox.classList.contains("open");
+      setFutureNextBoxOpen(nextState);
+      if (nextState) {
+        futureNextDetailBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    });
+
+    closeFutureNextBoxBtn.addEventListener("click", () => {
+      setFutureNextBoxOpen(false);
+    });
+
     reminderFilterDate.addEventListener("change", renderTopModeBox);
 
     btnClientHistoryToggle.addEventListener("click", () => {
