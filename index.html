@@ -238,7 +238,7 @@
 
     .top-action-buttons {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 12px;
       margin-bottom: 14px;
     }
@@ -270,6 +270,12 @@
       background: rgba(56, 189, 248, 0.18);
       border-color: #38bdf8;
       color: #bae6fd;
+    }
+
+    .top-mode-btn.active-history {
+      background: rgba(168, 85, 247, 0.18);
+      border-color: #a855f7;
+      color: #e9d5ff;
     }
 
     .reminder-date-picker-row {
@@ -309,6 +315,76 @@
 
     .mode-subtitle.recent-title {
       color: #7dd3fc;
+    }
+
+    .mode-subtitle.history-title {
+      color: #d8b4fe;
+    }
+
+    /* Alag Box: Next Date Aane Par Entry Box */
+    .next-entry-box {
+      display: none;
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.55);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .next-entry-box.open {
+      display: block;
+    }
+
+    .next-entry-box h2 {
+      font-size: 16.5px;
+      margin-bottom: 10px;
+      color: #86efac;
+    }
+
+    .prev-client-summary {
+      background: #0b1320;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+
+    /* Alag Box: Aage Ki Next Date Dene Par Client Detail Box */
+    .future-next-box {
+      background: rgba(245, 158, 11, 0.07);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .future-next-box h2 {
+      font-size: 16.5px;
+      margin-bottom: 10px;
+      color: #fcd34d;
+    }
+
+    /* Client History Alag Box */
+    .client-history-box {
+      display: none;
+      background: rgba(168, 85, 247, 0.08);
+      border: 1px solid rgba(168, 85, 247, 0.45);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .client-history-box.open {
+      display: block;
+    }
+
+    .client-history-box h2 {
+      font-size: 16.5px;
+      margin-bottom: 10px;
+      color: #d8b4fe;
     }
 
     .search-bar {
@@ -566,12 +642,6 @@
       font-weight: 600;
     }
 
-    .mode-banner.followup {
-      background: rgba(34, 197, 94, 0.15);
-      border-color: rgba(34, 197, 94, 0.45);
-      color: #bbf7d0;
-    }
-
     .record-meta {
       color: #94a3b8;
       font-size: 12.5px;
@@ -666,7 +736,7 @@
       <div class="search-result-box" id="mobileSearchResult"></div>
     </div>
 
-    <!-- Upar Do Buttons + Niche Box -->
+    <!-- Upar Action Buttons + Niche Box -->
     <div class="panel">
       <div class="top-action-buttons">
         <button type="button" class="top-mode-btn active-reminder" id="btnReminderMode">
@@ -674,6 +744,9 @@
         </button>
         <button type="button" class="top-mode-btn" id="btnRecentMode">
           🕒 Last Kaam Kin Ka Hua Hai
+        </button>
+        <button type="button" class="top-mode-btn" id="btnClientHistoryToggle">
+          📜 Client History
         </button>
       </div>
 
@@ -687,7 +760,75 @@
       </div>
     </div>
 
-    <!-- Add / Follow-up / Edit Client Form -->
+    <!-- Alag Box: Client History (Button Dabane Par Khulta Hai) -->
+    <div class="client-history-box" id="clientHistoryBox">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;">
+        <h2 style="margin-bottom:0;">📜 Client History</h2>
+        <button type="button" class="btn-cancel-inline" id="closeClientHistoryBtn">Band Karein</button>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <input
+          type="text"
+          id="historyFilterInput"
+          placeholder="Client naam ya mobile number se history chhaantein (ya sab dekhein)..."
+        />
+      </div>
+      <div id="clientHistoryList">
+        <p class="empty-note">History load ho rahi hai...</p>
+      </div>
+    </div>
+
+    <!-- Alag Box: Next Date Aane Par Client Ki Entry Box -->
+    <div class="next-entry-box" id="nextDateEntryBox">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;">
+        <h2 style="margin-bottom:0;">📝 Next Date Kaam Entry Box</h2>
+        <button type="button" class="btn-cancel-inline" id="closeNextEntryBoxBtn">Band Karein</button>
+      </div>
+
+      <div class="prev-client-summary" id="prevClientSummaryBox"></div>
+
+      <form id="nextDateEntryForm">
+        <div class="row-2">
+          <div class="form-group">
+            <label for="nextVisitWorkDate">Aaj / Is Next Date Ko Kis Date Ko Kaam Kiya</label>
+            <input type="date" id="nextVisitWorkDate" required />
+          </div>
+          <div class="form-group">
+            <label for="nextVisitBill">Total Bill (₹)</label>
+            <input type="number" id="nextVisitBill" placeholder="0" min="0" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="nextVisitWorkItems">Is Baar Kya Kaam Kiya / Kya Samaan Diya</label>
+          <textarea
+            id="nextVisitWorkItems"
+            placeholder="Aaj jo kaam kiya ya samaan diya uski poori detail likhein..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="nextVisitFutureDate">Aage Ki Next Date (Dobara Kab Jana Hai)</label>
+          <input type="date" id="nextVisitFutureDate" />
+        </div>
+
+        <button type="submit" class="btn-primary" id="saveNextVisitBtn">
+          Next Date Ki Entry Save Karein
+        </button>
+        <div class="status-msg" id="nextVisitStatus"></div>
+      </form>
+    </div>
+
+    <!-- Alag Box: Jin Clients Ko Aage Ki Next Date Di Gayi Hai Unki Poori Detail -->
+    <div class="future-next-box" id="futureNextDetailBox">
+      <h2>📌 Aage Ki Next Date Detail Box (Jin Clients Ko Aage Ki Date Di Gayi Hai)</h2>
+      <div id="futureNextDetailList">
+        <p class="empty-note">Records load ho rahe hain...</p>
+      </div>
+    </div>
+
+    <!-- Add / Edit Client Form -->
     <div class="panel">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
         <h2 id="formHeading" style="margin-bottom:0;">Add Client</h2>
@@ -811,9 +952,28 @@
 
     const btnReminderMode = document.getElementById("btnReminderMode");
     const btnRecentMode = document.getElementById("btnRecentMode");
+    const btnClientHistoryToggle = document.getElementById("btnClientHistoryToggle");
     const reminderDateRow = document.getElementById("reminderDateRow");
     const reminderFilterDate = document.getElementById("reminderFilterDate");
     const topModeBoxContent = document.getElementById("topModeBoxContent");
+
+    const clientHistoryBox = document.getElementById("clientHistoryBox");
+    const closeClientHistoryBtn = document.getElementById("closeClientHistoryBtn");
+    const historyFilterInput = document.getElementById("historyFilterInput");
+    const clientHistoryList = document.getElementById("clientHistoryList");
+
+    const nextDateEntryBox = document.getElementById("nextDateEntryBox");
+    const closeNextEntryBoxBtn = document.getElementById("closeNextEntryBoxBtn");
+    const prevClientSummaryBox = document.getElementById("prevClientSummaryBox");
+    const nextDateEntryForm = document.getElementById("nextDateEntryForm");
+    const nextVisitWorkDate = document.getElementById("nextVisitWorkDate");
+    const nextVisitBill = document.getElementById("nextVisitBill");
+    const nextVisitWorkItems = document.getElementById("nextVisitWorkItems");
+    const nextVisitFutureDate = document.getElementById("nextVisitFutureDate");
+    const saveNextVisitBtn = document.getElementById("saveNextVisitBtn");
+    const nextVisitStatus = document.getElementById("nextVisitStatus");
+
+    const futureNextDetailList = document.getElementById("futureNextDetailList");
 
     const mobileSearchInput = document.getElementById("mobileSearchInput");
     const mobileSearchResult = document.getElementById("mobileSearchResult");
@@ -830,9 +990,9 @@
     let allRecords = [];
     let unsubscribeRecords = null;
     let editingRecordId = null;
-    let followupSourceRecordId = null;
+    let followupSourceRecord = null;
     let activeInlineDateKey = null;
-    let activeTopView = "reminder";
+    let activeTopView = "reminder"; // "reminder" | "recent"
 
     function getTodayDateString() {
       const now = new Date();
@@ -845,6 +1005,7 @@
     const todayStr = getTodayDateString();
     document.getElementById("workDate").value = todayStr;
     reminderFilterDate.value = todayStr;
+    nextVisitWorkDate.value = todayStr;
 
     function setBoxMessage(el, message, type = "error") {
       el.textContent = message;
@@ -886,7 +1047,6 @@
 
     function resetFormMode() {
       editingRecordId = null;
-      followupSourceRecordId = null;
       formHeading.textContent = "Add Client";
       modeBanner.style.display = "none";
       modeBanner.className = "mode-banner";
@@ -894,6 +1054,14 @@
       cancelModeBtn.style.display = "none";
       clientForm.reset();
       document.getElementById("workDate").value = getTodayDateString();
+    }
+
+    function closeNextEntryBox() {
+      followupSourceRecord = null;
+      nextDateEntryBox.classList.remove("open");
+      nextDateEntryForm.reset();
+      nextVisitWorkDate.value = getTodayDateString();
+      clearBoxMessage(nextVisitStatus);
     }
 
     function setTopView(viewName) {
@@ -913,8 +1081,7 @@
     window.toggleInlineDateEditor = function (recordId, sectionTag) {
       const key = `${sectionTag}_${recordId}`;
       activeInlineDateKey = activeInlineDateKey === key ? null : key;
-      renderTopModeBox();
-      renderMobileSearch();
+      renderAllViews();
     };
 
     window.saveInlineNextDate = async function (recordId, inputId) {
@@ -939,7 +1106,6 @@
       if (!target) return;
 
       editingRecordId = target.id;
-      followupSourceRecordId = null;
       addClientFormBox.classList.add("open");
       formHeading.textContent = "Record Edit Karein";
       modeBanner.textContent = "Purana record edit ho raha hai. Galti sudhar kar 'Update Record' dabayein.";
@@ -965,28 +1131,25 @@
       const target = allRecords.find((item) => item.id === recordId);
       if (!target) return;
 
-      editingRecordId = null;
-      followupSourceRecordId = target.id;
-      addClientFormBox.classList.add("open");
-      formHeading.textContent = "Naya Kaam / Follow-up Entry";
-      modeBanner.textContent = `${target.name} (${target.mobile}) ke liye aaj ki nayi entry bharein: kya kaam kiya, bill, aur nayi Next Date daalein.`;
-      modeBanner.className = "mode-banner followup";
-      modeBanner.style.display = "block";
-      saveClientBtn.textContent = "Nayi Visit Save Karein";
-      cancelModeBtn.style.display = "block";
-      clearBoxMessage(clientFormStatus);
+      followupSourceRecord = { ...target };
+      clearBoxMessage(nextVisitStatus);
+      nextVisitWorkDate.value = getTodayDateString();
+      nextVisitBill.value = "";
+      nextVisitWorkItems.value = "";
+      nextVisitFutureDate.value = "";
 
-      document.getElementById("clientName").value = target.name || "";
-      document.getElementById("clientMobile").value = target.mobile || "";
-      document.getElementById("clientAddress").value = target.address || "";
-      document.getElementById("roUvType").value = target.roUv || "UV";
-      document.getElementById("totalBill").value = "";
-      document.getElementById("workAndItems").value = "";
-      document.getElementById("workDate").value = getTodayDateString();
-      document.getElementById("nextDate").value = "";
+      prevClientSummaryBox.innerHTML = `
+        <div style="font-weight:700; color:#86efac; margin-bottom:4px;">
+          Client: ${escapeHtml(target.name || "-")} (${escapeHtml(target.mobile || "-")})
+        </div>
+        <div><strong>Type:</strong> ${escapeHtml(target.roUv || "UV")} • <strong>Address:</strong> ${escapeHtml(target.address || "-")}</div>
+        <div><strong>Pichhli Kaam Date:</strong> ${escapeHtml(target.workDate || "-")} • <strong>Pichhla Bill:</strong> ₹${escapeHtml(target.totalBill || 0)} • <strong>Set Next Date:</strong> ${escapeHtml(target.nextDate || "-")}</div>
+        <div style="margin-top:4px;"><strong>Pichhla Kaam / Samaan:</strong> ${escapeHtml(target.workAndItems || "-")}</div>
+      `;
 
-      document.getElementById("workAndItems").focus();
-      clientForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      nextDateEntryBox.classList.add("open");
+      nextVisitWorkItems.focus();
+      nextDateEntryBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
 
     window.deleteRecordPermanently = async function (recordId) {
@@ -999,8 +1162,11 @@
 
       try {
         await deleteDoc(doc(db, "records", recordId));
-        if (editingRecordId === recordId || followupSourceRecordId === recordId) {
+        if (editingRecordId === recordId) {
           resetFormMode();
+        }
+        if (followupSourceRecord && followupSourceRecord.id === recordId) {
+          closeNextEntryBox();
         }
       } catch (err) {
         window.alert("Record delete karne mein samasya aayi: " + err.message);
@@ -1148,6 +1314,51 @@
       }
     }
 
+    function renderFutureNextDetailBox() {
+      const withNextDate = allRecords
+        .filter((r) => Boolean(r.nextDate))
+        .sort((a, b) => String(a.nextDate).localeCompare(String(b.nextDate)));
+
+      if (!withNextDate.length) {
+        futureNextDetailList.innerHTML = `<p class="empty-note">Abhi kisi client ko aage ki Next Date nahi di gayi hai.</p>`;
+      } else {
+        futureNextDetailList.innerHTML = withNextDate
+          .map((r) => formatRecordCard(r, { showNextBadge: true, isDue: true, sectionTag: "futureNext" }))
+          .join("");
+      }
+    }
+
+    function renderClientHistoryBox() {
+      const q = (historyFilterInput.value || "").trim().toLowerCase();
+      const qDigits = cleanMobile(q);
+
+      const filtered = !q
+        ? allRecords
+        : allRecords.filter((r) => {
+            const nameMatch = String(r.name || "").toLowerCase().includes(q);
+            const mobileMatch = qDigits && cleanMobile(r.mobile).includes(qDigits);
+            return nameMatch || mobileMatch;
+          });
+
+      if (!filtered.length) {
+        clientHistoryList.innerHTML = `<p class="empty-note">Is naam ya mobile number ki koi history nahi mili.</p>`;
+      } else {
+        clientHistoryList.innerHTML =
+          `<div class="mode-subtitle history-title">Kul ${filtered.length} history entries:</div>` +
+          filtered
+            .slice(0, 60)
+            .map((r) => formatRecordCard(r, { showNextBadge: true, sectionTag: "clientHist" }))
+            .join("");
+      }
+    }
+
+    function renderAllViews() {
+      renderTopModeBox();
+      renderFutureNextDetailBox();
+      renderClientHistoryBox();
+      renderMobileSearch();
+    }
+
     function startRecordsListener() {
       if (unsubscribeRecords) unsubscribeRecords();
       unsubscribeRecords = onSnapshot(
@@ -1156,12 +1367,13 @@
           allRecords = snapshot.docs
             .map((d) => ({ id: d.id, ...d.data() }))
             .sort((a, b) => getRecordTimeMs(b) - getRecordTimeMs(a));
-          renderTopModeBox();
-          renderMobileSearch();
+          renderAllViews();
         },
         (err) => {
           const msg = `<p class="empty-note">Firestore error: ${escapeHtml(err.message)}</p>`;
           topModeBoxContent.innerHTML = msg;
+          futureNextDetailList.innerHTML = msg;
+          clientHistoryList.innerHTML = msg;
         }
       );
     }
@@ -1282,6 +1494,68 @@
     btnRecentMode.addEventListener("click", () => setTopView("recent"));
     reminderFilterDate.addEventListener("change", renderTopModeBox);
 
+    btnClientHistoryToggle.addEventListener("click", () => {
+      const isOpen = clientHistoryBox.classList.toggle("open");
+      btnClientHistoryToggle.classList.toggle("active-history", isOpen);
+      renderClientHistoryBox();
+      if (isOpen) {
+        clientHistoryBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    });
+
+    closeClientHistoryBtn.addEventListener("click", () => {
+      clientHistoryBox.classList.remove("open");
+      btnClientHistoryToggle.classList.remove("active-history");
+    });
+
+    historyFilterInput.addEventListener("input", renderClientHistoryBox);
+
+    closeNextEntryBoxBtn.addEventListener("click", closeNextEntryBox);
+
+    nextDateEntryForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearBoxMessage(nextVisitStatus);
+      if (!followupSourceRecord) return;
+
+      const newWorkDate = nextVisitWorkDate.value;
+      const newBill = Number(nextVisitBill.value || 0);
+      const newWorkItems = nextVisitWorkItems.value.trim();
+      const newFutureDate = nextVisitFutureDate.value;
+
+      saveNextVisitBtn.disabled = true;
+      saveNextVisitBtn.textContent = "Save ho raha hai...";
+
+      try {
+        await updateDoc(doc(db, "records", followupSourceRecord.id), {
+          nextDate: "",
+          completedOn: newWorkDate,
+          updatedBy: auth.currentUser?.email || "",
+          updatedAtIso: new Date().toISOString()
+        });
+
+        await addDoc(collection(db, "records"), {
+          name: followupSourceRecord.name || "",
+          mobile: followupSourceRecord.mobile || "",
+          address: followupSourceRecord.address || "",
+          roUv: followupSourceRecord.roUv || "UV",
+          totalBill: newBill,
+          workAndItems: newWorkItems,
+          workDate: newWorkDate,
+          nextDate: newFutureDate,
+          createdBy: auth.currentUser?.email || "",
+          createdAtIso: new Date().toISOString()
+        });
+
+        closeNextEntryBox();
+        setBoxMessage(clientFormStatus, "Next date ki nayi entry safalta se save ho gayi!", "info");
+      } catch (err) {
+        setBoxMessage(nextVisitStatus, "Entry save karne mein samasya aayi: " + err.message, "error");
+      } finally {
+        saveNextVisitBtn.disabled = false;
+        saveNextVisitBtn.textContent = "Next Date Ki Entry Save Karein";
+      }
+    });
+
     toggleAddClientBtn.addEventListener("click", () => {
       addClientFormBox.classList.toggle("open");
     });
@@ -1319,15 +1593,6 @@
           resetFormMode();
           setBoxMessage(clientFormStatus, "Record safalta se update ho gaya!", "info");
         } else {
-          if (followupSourceRecordId) {
-            await updateDoc(doc(db, "records", followupSourceRecordId), {
-              nextDate: "",
-              completedOn: data.workDate,
-              updatedBy: auth.currentUser?.email || "",
-              updatedAtIso: new Date().toISOString()
-            });
-          }
-
           await addDoc(collection(db, "records"), {
             ...data,
             createdBy: auth.currentUser?.email || "",
@@ -1340,11 +1605,7 @@
         setBoxMessage(clientFormStatus, "Save/Update karne mein samasya aayi: " + err.message, "error");
       } finally {
         saveClientBtn.disabled = false;
-        saveClientBtn.textContent = editingRecordId
-          ? "Update Record"
-          : followupSourceRecordId
-          ? "Nayi Visit Save Karein"
-          : "Client Record Save Karein";
+        saveClientBtn.textContent = editingRecordId ? "Update Record" : "Client Record Save Karein";
       }
     });
 
